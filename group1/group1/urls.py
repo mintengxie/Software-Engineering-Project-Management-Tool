@@ -2,9 +2,18 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 
 urlpatterns = patterns('',
-    # Examples:
-    # url(r'^$', 'group1.views.home', name='home'),
-    # url(r'^blog/', include('blog.urls')),
-
-    url(r'^admin/', include(admin.site.urls)),
-)
+                       url(r'^$',
+                           'issue_tracker.views.home_page',
+                           name='home'
+                           ),
+                       url(r'^requirements/$',
+                           include('requirements.urls')
+                           ),
+                       url(r'^communication/$',
+                           include('communication.urls')
+                           ),
+                       url(r'^issue_tracker/$',
+                           include('issue_tracker.urls')
+                           ),
+                       # url(r'^admin/', include(admin.site.urls)),
+                       )
