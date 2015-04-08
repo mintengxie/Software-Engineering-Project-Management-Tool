@@ -3,7 +3,7 @@ from django.contrib import admin
 
 urlpatterns = patterns('',
                        url(r'^$',
-                           'issue_tracker.views.home_page',
+                           'project_router.views.home_page',
                            name='home'
                            ),
                        url(r'^requirements/$',
