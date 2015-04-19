@@ -12,7 +12,7 @@ urlpatterns = patterns('',
                        url(r'^communication/$',
                            include('communication.urls')
                            ),
-                       url(r'^issue_tracker/$',
+                       url(r'^issue_tracker/',
                            include('issue_tracker.urls')
                            ),
                        # url(r'^admin/', include(admin.site.urls)),
