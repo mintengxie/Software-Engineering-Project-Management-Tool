@@ -3,11 +3,11 @@ from django import forms
 from django.contrib.auth.models import User
 from django.forms import ModelForm
 
-from issue_tracker.app.models import STATUSES
-from issue_tracker.app.models import TYPES
-from issue_tracker.app.models import PRIORITIES
-from issue_tracker.app.models import PROJECTS
-from issue_tracker.app import models as it_models
+from issue_tracker.models import STATUSES
+from issue_tracker.models import TYPES
+from issue_tracker.models import PRIORITIES
+from issue_tracker.models import PROJECTS
+from issue_tracker import models as it_models
 
 
 class EmptyChoiceField(forms.ChoiceField):

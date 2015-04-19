@@ -1,7 +1,7 @@
 from django.contrib.auth import models as auth_models
 from rest_framework import viewsets
-from issue_tracker.app import models as it_models
-from issue_tracker.app import serializers
+from issue_tracker import models as it_models
+from issue_tracker import serializers
 
 
 class UserViewSet(viewsets.ModelViewSet):

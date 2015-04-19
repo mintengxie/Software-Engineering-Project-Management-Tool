@@ -9,9 +9,9 @@ from django.views.generic import ListView
 from django.views.generic.edit import CreateView
 from django.views.generic.edit import FormView
 from django.views.generic.edit import FormMixin
-from issue_tracker.app import forms
-from issue_tracker.app import models as it_models
-from issue_tracker.app import filters
+from issue_tracker import forms
+from issue_tracker import models as it_models
+from issue_tracker import filters
 from django.core.urlresolvers import reverse
 
 

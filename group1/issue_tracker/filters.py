@@ -1,7 +1,7 @@
 
 import datetime
 
-from issue_tracker.app import models
+from issue_tracker import models
 from django.db.models import Q
 from django.utils import timezone
 

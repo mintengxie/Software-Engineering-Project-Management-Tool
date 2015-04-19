@@ -5,8 +5,8 @@ from django.conf.urls import url
 from django.contrib.auth.decorators import login_required
 from django.contrib.staticfiles.views import serve
 from django.contrib import admin
-from issue_tracker.app import views as it_views
-from issue_tracker.app import viewsets as it_viewsets
+from issue_tracker import views as it_views
+from issue_tracker import viewsets as it_viewsets
 from rest_framework import routers
 
 admin.autodiscover()
