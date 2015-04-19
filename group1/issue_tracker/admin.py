@@ -1,3 +1,5 @@
 from django.contrib import admin
+from issue_tracker.app import models
 
-# Register your models here.
+admin.site.register(models.Issue)
+admin.site.register(models.IssueComment)
