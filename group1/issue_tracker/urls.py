@@ -16,9 +16,10 @@ router = routers.DefaultRouter()
 router.register(r'rest/users', it_viewsets.UserViewSet)
 router.register(r'rest/issues', it_viewsets.IssueViewSet)
 
-urlpatterns = patterns(
-    '',
-
+urlpatterns = patterns('',
+                       url(r'^issue/create/$',
+                           it_views.CreateIssue.as_view(),
+                           name='create_issue'),
     # Index page:
     # TODO(jdarrieu): Get it to point to individual issues.
     url(r'^$',
