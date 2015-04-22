@@ -127,7 +127,7 @@ class ViewIssue(DetailView, FormMixin):
 class SearchIssues(FormView):
     form_class = forms.SearchForm
     template_name = 'search.html'
-    success_url = '/issue/search/'
+    success_url = '/qissue/search/'
 
     def form_valid(self, form):
         data = filters.filter_issue_results(form.cleaned_data)
