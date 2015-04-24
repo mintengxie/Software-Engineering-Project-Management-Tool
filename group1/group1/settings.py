@@ -37,6 +37,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
     'requirements',
     'communication',
     'issue_tracker',
@@ -72,7 +73,7 @@ DATABASES = {
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC+5'
+TIME_ZONE = 'America/New_York'
 
 USE_I18N = True
 
@@ -87,4 +88,4 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.abspath(os.path.join(BASE_DIR, '../../../static'))
 
-LOGIN_URL = '/admin/login?next=/issue_tracker/issue/view'
+LOGIN_URL = '/signin'
