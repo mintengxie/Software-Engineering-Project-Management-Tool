@@ -37,7 +37,6 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'project_router',
     'requirements',
     'communication',
     'issue_tracker',
@@ -88,4 +87,4 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.abspath(os.path.join(BASE_DIR, '../../../static'))
 
-LOGIN_URL = '/admin/login?next=/issue_tracker/issue/view'
+LOGIN_URL = '/signin'
