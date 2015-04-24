@@ -43,6 +43,13 @@ class IterationForm(forms.ModelForm):
 			else:
 				field.widget.attrs.update({'class':'form-control'})
 
+	def clean_end_date(self):
+		startdate = self.cleaned_data['start_date']
+		enddate = self.cleaned_data['end_date']
+		if enddate < startdate:
+			raise forms.ValidationError('Iteration end date should be later than it\'s start date !')
+		return enddate
+		
 	class Meta:	
 		model = Iteration
 		fields = ('title', 'description', 'start_date', 'end_date',)
@@ -90,6 +97,12 @@ class StoryForm(forms.ModelForm):
 			else:
 				field.widget.attrs.update({'class':'form-control'})
 	
+	def clean_hours(self):
+		data = self.cleaned_data['hours']
+		if data < 0:
+			raise forms.ValidationError('Hours should be greater than or equal to 0 !')
+		return data
+
 	class Meta:
 		model = Story
 		fields = ('title', 'description', 'reason', 'test', 'hours', 'owner', 'status', 'points', 'pause')
