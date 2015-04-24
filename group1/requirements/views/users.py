@@ -50,7 +50,8 @@ def signin(request):
             if user.is_active:
                 login(request, user)
                 if next == '':
-                    return HttpResponseRedirect('/req/projects')
+                    # return HttpResponseRedirect('/req/projects')
+                    return HttpResponseRedirect('/')
                 else:
                     return HttpResponseRedirect(next)
         else:
