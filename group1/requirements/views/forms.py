@@ -11,8 +11,6 @@ from requirements.models.iteration import Iteration
 from requirements.models.story_comment import StoryComment
 from django.forms.models import inlineformset_factory
 
-
-
 class SignUpForm(UserCreationForm):
 	email = forms.EmailField(required=True)
 	
@@ -91,7 +89,7 @@ class StoryForm(forms.ModelForm):
 				field.widget.attrs['class'] += ' form-control'
 			else:
 				field.widget.attrs.update({'class':'form-control'})
-
+	
 	class Meta:
 		model = Story
 		fields = ('title', 'description', 'reason', 'test', 'hours', 'owner', 'status', 'points', 'pause')
@@ -111,8 +109,6 @@ class FileForm(forms.Form):
 # 	username=forms.CharField(label='Username:', max_length=100)
 # 	password=forms.CharField(label='password:', max_length=100, widget=forms.PasswordInput())
 # 	confirmPassword=forms.CharField(label='Confirm password:', max_length=100)
-
-TaskFormSet = inlineformset_factory(Story, Task, fields=('description',), extra=0)
 
 class CommentForm(forms.ModelForm):
 
@@ -147,3 +143,6 @@ class TaskForm(forms.ModelForm):
 		widgets = {
 			'description' : forms.Textarea(attrs={'rows': 1}),
 		}	
+
+TaskFormSet = inlineformset_factory(Story, Task, fields=('description',), form=TaskForm, extra=0)
+

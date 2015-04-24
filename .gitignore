@@ -2,3 +2,7 @@
 __pycache__
 db.sqlite3
 *.pyc
+group1/group1
+group1/requirements/migrations
+group1/issue_tracker/migrations
+group1/communication/migrations
