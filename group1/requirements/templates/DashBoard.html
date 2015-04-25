@@ -36,20 +36,26 @@
                                             {% for anAssociation in associationsWithUser %}
                                                 {% check_permission anAssociation aProject "DeleteProject" as can_delete %} 
                                                 {% if can_delete  %} 
-        							        		<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showDialog('/req/deleteproject/{{ aProject.id }}');">
+                                                <!-- data-del-proj below allows ui testing-->
+        							        		<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showDialog('/req/deleteproject/{{ aProject.id }}');"
+        							        		data-del-proj = '{{ aProject.title }}'>
                                                     <i class="fa fa-trash-o fa-fw"></i>
                                                      Delete
                                                     </a>
                                                 {% endif %}
                                                 {% check_permission anAssociation aProject "EditProject" as can_edit %} 
                                                 {% if can_edit %} 
-         							           		<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showDialog('/req/editproject/{{ aProject.id }}');">
+                                                 <!-- data-edit-proj below allows ui testing-->
+         							           		<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showDialog('/req/editproject/{{ aProject.id }}');"
+         							           		data-edit-proj = '{{ aProject.title }}'>
                                                     <i class="fa fa-edit fa-fw"></i>
                                                     Edit
                                                     </a>
                                                 {% endif %}
                                             {% endfor %}
-							           		<a class="btn btn-link pull-right" href="/req/projectdetail/{{ aProject.id }}">
+                                             <!-- data-open-proj below allows ui testing-->
+							           		<a class="btn btn-link pull-right" href="/req/projectdetail/{{ aProject.id }}"
+							           		data-open-proj = '{{ aProject.title }}'>
 							           			<i class="glyphicon glyphicon-folder-open fa-fw"></i>
 							           			 Open
 							           		</a>
