@@ -4,11 +4,13 @@ from django.http import HttpResponse
 from comm.models import User, Room, Message, UserRoom
 from rest_framework import viewsets, generics
 from comm.serializers import UserSerializer, RoomSerializer, MessageSerializer, MessageDataSerializer, UserRoomSerializer, UserRoomDataSerializer
+from django.contrib.auth.decorators import login_required
 import random
 
 # Return the main chat room
+@login_required(login_url='/signin')
 def index(request):
-	context = {'user': random.choice(User.objects.all())}
+	context = {'user': request.user}
 	return render(request, 'comm/index.html', context)
 
 ## Django REST framework classes...
