@@ -34,11 +34,11 @@ class Story(ProjMgmtBase):
     )
 
     project = models.ForeignKey(Project)    
-    iteration = models.ForeignKey(Iteration,blank=True,null=True)
+    iteration = models.ForeignKey(Iteration,blank=True,null=True,on_delete=models.SET_NULL)
     reason = models.CharField(default='', max_length=1024,blank=True)
     test= models.CharField(default='', max_length=1024, blank=True)
     hours = models.IntegerField(default=0)
-    owner = models.ForeignKey(User,blank=True,null=True,default=None)
+    owner = models.ForeignKey(User,blank=True,null=True,default=None,on_delete=models.SET_NULL)
     status = models.IntegerField(choices=STATUS_CHOICES, max_length=1, default=STATUS_UNSTARTED)
     points = models.IntegerField(choices=POINTS_CHOICES, max_length=1, default=POINTS_NONE)
     pause = models.BooleanField(default=False)
