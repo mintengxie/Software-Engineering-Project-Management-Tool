@@ -20,7 +20,7 @@ app.all('/*', function(req, res, next) {
 var done = false;
 
 app.use(multer({
-	'dest': 'static/uploads',
+	'dest': '/home/pgmvt/sites/pre.3blueprints.com/static/',
 	onFileUploadStart: function(file) {
 		console.log(file.originalname + ' is starting...');
 	},
