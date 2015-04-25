@@ -61,6 +61,10 @@
                         <div class="col-xs-12 col-sm-9" id="{{ form.end_date.id_for_label }}_popover">
                             <div class="input-group date form_datetime">
                                 {{ form.end_date }}
+                                {% if form.end_date.errors %}
+                                <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true" style="padding-right: 60px;"></span>
+                                <span id="inputError2Status" class="sr-only">(error)</span>
+                                {% endif %}
                                 <span class="input-group-addon"><i class="fa fa-calendar fa-fw"></i></span>
                             </div>
                         </div>
