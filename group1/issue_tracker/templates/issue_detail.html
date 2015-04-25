@@ -121,7 +121,7 @@ pre {
                     <p class="text-warning" style="color: #A70303;"><b>Status Updates/Comments: </b></p>
                     {% for comment in comment_list %}
                         
-                            <a href="#{{ forloop.counter0 }}" style="color: #B22222;">#{{ forloop.counter0 }}</a>, 
+                            <a href="#{{ forloop.counter0 }}" style="color: #B22222;">#{{ forloop.revcounter }}</a>, 
                             <a href="mailto:{{ comment.poster.email }}" style="color: #B22222;">{{ comment.poster.first_name }} {{ comment.poster.last_name }} ({{ comment.poster }})</a>, <i>{{comment.date}}</i><br/>
                         {% if comment.is_comment%}
                             <pre style=>{{ comment.comment }}</pre>
