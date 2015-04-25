@@ -1,5 +1,9 @@
-from fabric.contrib.files import append, exists, sed
-from fabric.api import env, local, run
+from fabric.api import env
+from fabric.api import local
+from fabric.api import run
+from fabric.contrib.files import append
+from fabric.contrib.files import exists
+from fabric.contrib.files import sed
 import random
 
 REPO_URL = 'https://github.com/sameran/tddjango'
@@ -33,7 +37,8 @@ def _get_latest_source(source_folder):
 def _update_settings(source_folder, site_name):
     settings_path = source_folder + '/superlists/superlists/settings.py'
     sed(settings_path, "DEBUG = True", "DEBUG = False")
-    sed(settings_path, 'ALLOWED_HOSTS=.+$', 'ALLOWED_HOSTS = ["%s"]' % (site_name,))
+    sed(settings_path, 'ALLOWED_HOSTS=.+$',
+        'ALLOWED_HOSTS = ["%s"]' % (site_name,))
     secret_key_file = source_folder + '/superlists/superlists/secret_key.py'
     if not exists(secret_key_file):
         chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)'
@@ -46,12 +51,17 @@ def _update_virtualenv(source_folder):
     virtualenv_folder = source_folder + '/../virtualenv'
     if not exists(virtualenv_folder + '/bin/pip'):
         run('virtualenv --python=python2.7 %s' % (virtualenv_folder,))
-    run('%s/bin/pip install -r %s/requirements.txt' % (virtualenv_folder, source_folder))
+    run('%s/bin/pip install -r %s/requirements.txt'
+        % (virtualenv_folder, source_folder))
 
 
 def _update_static_files(source_folder):
-    run('cd %s/superlists && ../../virtualenv/bin/python2 manage.py collectstatic --noinput' % (source_folder,))
+    run('cd %s/superlists &&'
+        ' ../../virtualenv/bin/python2 manage.py collectstatic --noinput'
+        % (source_folder,))
 
 
 def _update_database(source_folder):
-    run('cd %s/superlists && ../../virtualenv/bin/python2 manage.py migrate --noinput' %(source_folder,))
+    run('cd %s/superlists &&'
+        ' ../../virtualenv/bin/python2 manage.py migrate --noinput'
+        % (source_folder,))
