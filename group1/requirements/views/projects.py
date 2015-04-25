@@ -194,7 +194,7 @@ def remove_user_from_project(request, projectID, username):
 
     return render(request, 'UserSummary.html', context)
     
-@login_required(login_url='/accounts/login/')
+@login_required(login_url='/signin')
 @user_owns_project() 
 def manage_user_association(request, projectID, userID):
     form = SelectAccessLevelForm()
@@ -218,13 +218,13 @@ def change_user_role(request, projectID, userID):
     # by POST) and passes them on to the project_api method of the same name.
     project = project_api.get_project(projectID)
     user = User.objects.get(id=userID)
-    print user.username #debug
+    # print user.username #debug
     
     # Get the role that was sent via the dropdown in the form. 
     retrieved_role = (request.POST).get('user_role')
-    print retrieved_role # to console for debugging
+    # print retrieved_role # to console for debugging
     project_api.change_user_role(project, user, retrieved_role)
-    return redirect('/req/projects/' + projectID)
+    return redirect('/req/projectdetail/' + projectID)
 
 @user_can_access_project()    
 def get_attachments(request, projectID):

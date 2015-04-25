@@ -103,6 +103,19 @@
 									<a data-toggle="collapse" data-parent="" href="#iter_body_{{ iteration.id }}" aria-expanded="true">
 										{{ iteration.title }} {{iteration.start_date}} - {{iteration.end_date}}
 									</a>
+                                    {% check_permission association project "DeleteIteration" as can_delete_iter %} 
+                                    {% if can_delete_iter %}
+									<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showDialog('/req/deleteiteration/{{ project.id }}/{{ iteration.id }}');">
+										<i class="glyphicon glyphicon-remove"></i>
+									</a>
+									{% endif %}
+
+                                    {% check_permission association project "EditIteration" as can_edit_iter %} 
+                                    {% if can_edit_iter %}
+									<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showDialog('/req/edititeration/{{ project.id }}/{{ iteration.id }}');">
+										<i class="glyphicon glyphicon-edit"></i>
+									</a>
+									{% endif %}
 								</h2>
 							</div>
 							<div id="iter_body_{{ iteration.id }}" class="panel-collapse collapse in" aria-expanded="true">

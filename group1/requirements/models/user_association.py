@@ -42,7 +42,7 @@ class UserAssociation(models.Model):
                          "EditHours", "EditPoints", "SelectStoryStatus", "AddTasks", "EditTasks", 
                           "AddUser", "DeleteUser", "ChangePermissions", 
                           "PauseStory", "EditAccepted", "EditPaused", "MoveStoryToIteration",
-                          "EditProject", "DeleteProject", "AddIteration", "EditOwner"]
+                          "EditProject", "DeleteProject", "AddIteration", "EditIteration", "DeleteIteration", "EditOwner"]
 # >>>>>>> newfeature-addpermissionforeditstory
         }
         # TODO: exception handling if permission string not found.
