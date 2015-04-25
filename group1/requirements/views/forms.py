@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.forms.widgets import ClearableFileInput
 from django.forms.extras.widgets import SelectDateWidget, Select
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm, UserChangeForm
 from requirements.models import user_association
 from requirements.models.project import Project
 from requirements.models.story import Story
@@ -32,6 +32,32 @@ class SignUpForm(UserCreationForm):
 		if commit:
 			user.save()
 		return user
+
+class ChangePwdForm(PasswordChangeForm):
+
+	def __init__(self, *args, **kwargs):
+		self.user = kwargs.pop('user', None)
+		super(PasswordChangeForm, self).__init__(self.user, *args, **kwargs)
+		for name, field in self.fields.items():
+			if field.widget.attrs.has_key('class'):
+				field.widget.attrs['class'] += 'form-control'
+			else:
+				field.widget.attrs.update({'class':'form-control'})
+
+class UserProfileForm(UserChangeForm):
+
+	def __init__(self, *args, **kwargs):
+		super(UserChangeForm, self).__init__(*args, **kwargs)
+		for name, field in self.fields.items():
+			if field.widget.attrs.has_key('class'):
+				field.widget.attrs['class'] += 'form-control'
+			else:
+				field.widget.attrs.update({'class':'form-control'})
+
+	class Meta:
+		model = User
+		fields = ('first_name','last_name','email','username')
+
 
 class IterationForm(forms.ModelForm):
 	
