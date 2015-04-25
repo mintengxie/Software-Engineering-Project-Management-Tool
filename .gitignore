@@ -6,3 +6,5 @@ group1/group1/settings.py
 group1/requirements/migrations
 group1/issue_tracker/migrations
 group1/communication/migrations
+
+group1/group1/settings.py
