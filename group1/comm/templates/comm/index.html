@@ -169,12 +169,28 @@
       </div>
 
       <div id="message_search" class="input-group hidden">
-        <input type="text" class="form-control" placeholder="Search messages...">
+        <input id="search_box" type="text" class="form-control" placeholder="Search messages...">
         <span class="input-group-btn">
-          <button class="btn btn-default" type="button">
+          <button id="search_button_box" class="btn btn-default" type="button">
             <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
           </button>
         </span>
+      </div>
+
+      <div id="searchModal" class="modal fade">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              <h3 class="modal-title">Search Results</h3>
+            </div>
+            <div id="searchResults" class="modal-body">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
       </div>
 
     </div>
