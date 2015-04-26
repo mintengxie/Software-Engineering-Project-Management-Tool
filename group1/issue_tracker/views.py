@@ -225,8 +225,9 @@ class VerifiedListIssuesView(MultipleIssues):
             verifier=self.request.user).order_by('-pk')
         return queryset
 
+
 def AddUserCountsToContext(context, user):
-    """Add user counts to the context. 
+    """Add user counts to the context.
 
     This work serves to add various different counts to the context so that
     the left sidebar can display the counts specific to each user.  Please note

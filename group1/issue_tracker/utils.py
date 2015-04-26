@@ -6,6 +6,8 @@ import random
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 from issue_tracker import models as it_models
+from requirements.models import project_api
+from requirements.models import project as project_model
 
 USERS = (('Mike', 'Bibriglia', 'mbibrigl',),
          ('Bill', 'Cosby', 'bcosby',),
@@ -57,6 +59,20 @@ COMMENTS = (
     " cold rational brain.",
     "This is an automated statement: 42.",
     "I forgot to say in the description.. What a wonderful world.",
+    )
+
+PROJECTS = (
+    ("Issue tracking project",
+     "We must go deeper into creating issues for project managing by creating"
+     " a project to manage the issue tracking."),
+    ("Project management",
+     "Ever see a snake eat its tail?"),
+    ("Communication",
+     "Tell me all about it!"),
+    ("Dummy Project!",
+     "Sorta like the book series. You can learn a lot from a dummy!"),
+    ("Big Ole Project",
+     "It is about this big. *makes hand gesture*"),
     )
 
 
@@ -141,6 +157,9 @@ def create_issues(number_of_issues, out_handle=None):
     user_ids = []
     for user in User.objects.all():
         user_ids.append(user.pk)
+    project_ids = []
+    for project in project_model.Project.objects.all():
+        project_ids.append(project.pk)
     title_count = len(TITLES) - 1
     description_count = len(DESCRIPTIONS) - 1
     if out_handle:
@@ -167,8 +186,8 @@ def create_issues(number_of_issues, out_handle=None):
             status=status,
             priority=it_models.PRIORITIES[
                 random.randint(0, len(it_models.PRIORITIES) - 1)][0],
-            project=it_models.PROJECTS[
-                random.randint(0, len(it_models.PROJECTS) - 1)][0],
+            project=project_model.Project.objects.get(
+                id=project_ids[random.randint(0, len(project_ids) - 1)]),
             modified_date=get_random_date(),
             submitted_date=get_random_date(),
             reporter=User.objects.get(
@@ -184,6 +203,44 @@ def create_issues(number_of_issues, out_handle=None):
                 poster=User.objects.get(
                     pk=user_ids[random.randint(0, len(user_ids) - 1)]),
                 is_comment=True)
+
+    if out_handle:
+        out_handle.write('\n')
+
+
+def _get_random_user(user_ids):
+    return User.objects.get(pk=user_ids[random.randint(0, len(user_ids) - 1)])
+
+
+def create_projects(number_of_projects, out_handle=None):
+    """Creating some number of random projects
+
+    The projects will start in various states with different user associations.
+
+    Args:
+      number_of_projects: The number of projects to be created.
+      out_handle: The output handler for printing.
+    """
+    # This extra work for user ids is necessary due to the fact that the
+    # database might have been wiped, but the origin pk for the user still
+    # has been claimed, so we must gather the current pk list to apply them
+    # to create issues.
+    user_ids = []
+    for user in User.objects.all():
+        user_ids.append(user.pk)
+    project_count = len(PROJECTS) - 1
+    if out_handle:
+        out_handle.write('\nCreating projects')
+    for i in xrange(number_of_projects):
+        if out_handle:
+            out_handle.write('.', ending='')
+            out_handle.flush()
+        fields = {'title': '%s: %d' % (
+                      PROJECTS[random.randint(0, project_count)][0],
+                      i),
+                  'description': PROJECTS[random.randint(0, project_count)][1]}
+        project_api.create_project(user=_get_random_user(user_ids),
+                                   fields=fields)
 
     if out_handle:
         out_handle.write('\n')
