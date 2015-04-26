@@ -5,7 +5,7 @@ import random
 
 from django.contrib.auth.models import User
 from django.db import IntegrityError
-from issue_tracker.app import models
+from issue_tracker import models as it_models
 
 USERS = (('Mike', 'Bibriglia', 'mbibrigl',),
          ('Bill', 'Cosby', 'bcosby',),
@@ -151,24 +151,24 @@ def create_issues(number_of_issues, out_handle=None):
             out_handle.flush()
         # Go through a few extra hoops to make sure that if we create a issue
         # with any status other than new, it has been assigned to someone.
-        status = models.STATUSES[
-            random.randint(0, len(models.STATUSES) - 1)][0]
+        status = it_models.STATUSES[
+            random.randint(0, len(it_models.STATUSES) - 1)][0]
         if status != 'new':
             assignee = User.objects.get(
                 pk=user_ids[random.randint(0, len(user_ids) - 1)])
         else:
             assignee = None
-        issue = models.Issue.objects.create(
+        issue = it_models.Issue.objects.create(
             title=TITLES[random.randint(0, title_count)],
             description=DESCRIPTIONS[
                 random.randint(0, description_count)],
-            issue_type=models.TYPES[
-                random.randint(0, len(models.TYPES) - 1)][0],
+            issue_type=it_models.TYPES[
+                random.randint(0, len(it_models.TYPES) - 1)][0],
             status=status,
-            priority=models.PRIORITIES[
-                random.randint(0, len(models.PRIORITIES) - 1)][0],
-            project=models.PROJECTS[
-                random.randint(0, len(models.PROJECTS) - 1)][0],
+            priority=it_models.PRIORITIES[
+                random.randint(0, len(it_models.PRIORITIES) - 1)][0],
+            project=it_models.PROJECTS[
+                random.randint(0, len(it_models.PROJECTS) - 1)][0],
             modified_date=get_random_date(),
             submitted_date=get_random_date(),
             reporter=User.objects.get(
@@ -177,7 +177,7 @@ def create_issues(number_of_issues, out_handle=None):
             )
         comment_count = len(COMMENTS) - 1
         for _ in xrange(1, random.randint(1, 10)):
-            models.IssueComment.objects.create(
+            it_models.IssueComment.objects.create(
                 comment=COMMENTS[random.randint(0, comment_count)],
                 issue_id=issue,
                 date=get_random_date(),
@@ -192,4 +192,4 @@ def create_issues(number_of_issues, out_handle=None):
 def wipe_db():
     """This will wipe the database of all Users and Issues."""
     User.objects.all().delete()
-    models.Issue.objects.all().delete()
+    it_models.Issue.objects.all().delete()

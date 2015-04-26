@@ -30,9 +30,9 @@ class CreateIssue(CreateView):
         new_issue.save()
         return HttpResponseRedirect(new_issue.get_absolute_url())
 
-    #----------------------------------------------------------------------
+    # ---------------------------------------------------------------------
     def get_context_data(self, **kwargs):
-        context=super(CreateIssue, self).get_context_data(**kwargs)
+        context = super(CreateIssue, self).get_context_data(**kwargs)
         AssigneeListCount = it_models.Issue.objects.filter(
             assignee=self.request.user).filter(
                 status__in=[x[0] for x in it_models.OPEN_STATUSES]).count()
@@ -48,7 +48,7 @@ class CreateIssue(CreateView):
         context['Clocount'] = CloseListCount
         context['Vercount'] = VerifiedListCount
         return context
-    #----------------------------------------------------------------------
+    # ---------------------------------------------------------------------
 
 
 class EditIssue(UpdateView):
@@ -61,39 +61,39 @@ class EditIssue(UpdateView):
         if form.has_changed():
             current_issue = form.save(commit=False)
             text = ['Issue is modified:']
-            object =it_models.Issue.objects.get(pk=self.object.pk)
+            object = it_models.Issue.objects.get(pk=self.object.pk)
             for field_name, field in form.fields.items():
                 if field_name in form.changed_data:
-                    #if field_name in ['assignee', 'verifier']:
-                        #text.append('%s: old value -> %s'
-                                    #% (field_name,
-                                       #form.cleaned_data[field_name].username))
-                    #I don't know how to make it more easy to read(Amy)
-                    if field_name=="assignee":
-                        if object.assignee==None:
-                            text.append('%s: old value(None) -> %s'
-                                    % (field_name,
-                                       form.cleaned_data[field_name].username))
+                    # if field_name in ['assignee', 'verifier']:
+                    #     text.append('%s: old value -> %s' % (
+                    #         field_name,
+                    #         form.cleaned_data[field_name].username))
+                    # I don't know how to make it more easy to read(Amy)
+                    if field_name == 'assignee':
+                        if object.assignee is None:
+                            text.append('%s: old value(None) -> %s' % (
+                                field_name,
+                                form.cleaned_data[field_name].username))
                         else:
-                            text.append('%s: old value(%s) -> %s'
-                                    % (field_name,
-                                       object.assignee.username,
-                                       form.cleaned_data[field_name].username))
-                    elif field_name=="verifier":
-                        if object.verifier==None:
-                            text.append('%s: old value(None) -> %s'
-                                    % (field_name,
-                                       form.cleaned_data[field_name].username))
+                            text.append('%s: old value(%s) -> %s' % (
+                                field_name,
+                                object.assignee.username,
+                                form.cleaned_data[field_name].username))
+                    elif field_name == 'verifier':
+                        if object.verifier is None:
+                            text.append('%s: old value(None) -> %s' % (
+                                field_name,
+                                form.cleaned_data[field_name].username))
                         else:
-                            text.append('%s: old value(%s) -> %s'
-                                    % (field_name,
-                                       object.verifier.username,
-                                       form.cleaned_data[field_name].username))
+                            text.append('%s: old value(%s) -> %s' % (
+                                field_name,
+                                object.verifier.username,
+                                form.cleaned_data[field_name].username))
                     else:
-                        text.append('%s: old value(%s) -> %s'
-                                    % (field_name,
-                                       getattr(object,field_name),
-                                       form.cleaned_data[field_name]))
+                        text.append('%s: old value(%s) -> %s' % (
+                            field_name,
+                            getattr(object, field_name),
+                            form.cleaned_data[field_name]))
 
             current_issue.save()
             new_comment = it_models.IssueComment(comment='\n'.join(text),
@@ -103,10 +103,10 @@ class EditIssue(UpdateView):
                                                  is_comment=False)
             new_comment.save()
         return HttpResponseRedirect(self.object.get_absolute_url())
-        
-    ###---------------------------------------------------------
+
+    # ---------------------------------------------------------
     def get_context_data(self, **kwargs):
-        context=super(EditIssue, self).get_context_data(**kwargs)
+        context = super(EditIssue, self).get_context_data(**kwargs)
         AssigneeListCount = it_models.Issue.objects.filter(
             assignee=self.request.user).filter(
                 status__in=[x[0] for x in it_models.OPEN_STATUSES]).count()
@@ -126,7 +126,8 @@ class EditIssue(UpdateView):
         context['Clocount'] = CloseListCount
         context['Vercount'] = VerifiedListCount
         return context
-    ###----------------------------------------------------------
+    # ----------------------------------------------------------
+
 
 class ViewIssue(DetailView, FormMixin):
     model = it_models.Issue
@@ -141,7 +142,7 @@ class ViewIssue(DetailView, FormMixin):
         # context['form'] = forms.CommentForm
         context['form'] = self.get_form(form_class)
 
-        ###---------------------------------------------------------------
+        # ---------------------------------------------------------------
         AssigneeListCount = it_models.Issue.objects.filter(
             assignee=self.request.user).filter(
                 status__in=[x[0] for x in it_models.OPEN_STATUSES]).count()
@@ -156,7 +157,7 @@ class ViewIssue(DetailView, FormMixin):
         context['Repcount'] = ReportListCount
         context['Clocount'] = CloseListCount
         context['Vercount'] = VerifiedListCount
-        ###------------------------------------------------------------------
+        # ------------------------------------------------------------------
         return context
 
     def get_success_url(self):
@@ -189,9 +190,9 @@ class SearchIssues(FormView):
     template_name = 'search.html'
     success_url = '/qissue/search/'
 
-    ###------------------------------------------------------------------
+    # ------------------------------------------------------------------
     def get_context_data(self, **kwargs):
-        context=super(SearchIssues, self).get_context_data(**kwargs)
+        context = super(SearchIssues, self).get_context_data(**kwargs)
         AssigneeListCount = it_models.Issue.objects.filter(
             assignee=self.request.user).filter(
                 status__in=[x[0] for x in it_models.OPEN_STATUSES]).count()
@@ -207,31 +208,31 @@ class SearchIssues(FormView):
         context['Clocount'] = CloseListCount
         context['Vercount'] = VerifiedListCount
         return context
-    ###------------------------------------------------------------------
+    # ------------------------------------------------------------------
 
-    def form_valid(self, form ,**kwargs):
+    def form_valid(self, form, **kwargs):
         data = filters.filter_issue_results(form.cleaned_data)
         if not data:
             data = []
-            # error = "No Data"  # error text message
-            SearchListCount=0
+            # error = 'No Data'  # error text message
+            SearchListCount = 0
         else:
-        #----------------------------------------
+            # ----------------------------------------
             SearchListCount = data.count()
-        #----------------------------------------
-        context=self.get_context_data(**kwargs)
-        context['object_list']=data
-        context['page']='Issue Search'
-        context['Seacount']=SearchListCount        
+        # ----------------------------------------
+        context = self.get_context_data(**kwargs)
+        context['object_list'] = data
+        context['page'] = 'Issue Search'
+        context['Seacount'] = SearchListCount
         return self.render_to_response(context)
-        #----------------------------------------
+        # ----------------------------------------
 
     # TODO(Ted): I add this but it does not work
     # def form_invalid(self, form):
     #     data = filters.filter_issue_results(form.cleaned_data)
     #     if not data:
     #         data = []
-    #         error = "No Data"
+    #         error = 'No Data'
     #         # return super(SearchIssues, self).form_valid(form)
 
     #     return self.render_to_response({'object_list': data,
@@ -239,16 +240,17 @@ class SearchIssues(FormView):
     #                                     'form': form,
     #                                     'NoDataError': error,
     #                                     })
-        # return super(SearchIssues, self).form_invalid(form)
+    #     return super(SearchIssues, self).form_invalid(form)
     # testing form_invalid funcation
 
 
 class MultipleIssues(ListView):
     model = it_models.Issue
     template_name = 'multi_issue.html'
-    #-------------------------------------------------------------------
+    # -------------------------------------------------------------------
+
     def get_context_data(self, **kwargs):
-        context=super(MultipleIssues, self).get_context_data(**kwargs)
+        context = super(MultipleIssues, self).get_context_data(**kwargs)
         AssigneeListCount = it_models.Issue.objects.filter(
             assignee=self.request.user).filter(
                 status__in=[x[0] for x in it_models.OPEN_STATUSES]).count()
@@ -269,7 +271,7 @@ class MultipleIssues(ListView):
         context['Vercount'] = VerifiedListCount
 
         return context
-    #---------------------------------------------------------------------
+    # ---------------------------------------------------------------------
 
 
 class AssigneeListIssuesView(MultipleIssues):
@@ -297,7 +299,7 @@ class ClosedListIssuesView(MultipleIssues):
                 '-closed_date')
         return queryset
 
-    
+
 class VerifiedListIssuesView(MultipleIssues):
 
     def get_queryset(self):
