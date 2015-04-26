@@ -30,25 +30,10 @@ class CreateIssue(CreateView):
         new_issue.save()
         return HttpResponseRedirect(new_issue.get_absolute_url())
 
-    # ---------------------------------------------------------------------
     def get_context_data(self, **kwargs):
         context = super(CreateIssue, self).get_context_data(**kwargs)
-        AssigneeListCount = it_models.Issue.objects.filter(
-            assignee=self.request.user).filter(
-                status__in=[x[0] for x in it_models.OPEN_STATUSES]).count()
-        ReportListCount = it_models.Issue.objects.filter(
-            reporter=self.request.user).order_by('-pk').count()
-        CloseListCount = it_models.Issue.objects.filter(
-            status__in=[x[0] for x in it_models.CLOSED_STATUSES]).order_by(
-                '-closed_date').count()
-        VerifiedListCount = it_models.Issue.objects.filter(
-            verifier=self.request.user).order_by('-pk').count()
-        context['Asscount'] = AssigneeListCount
-        context['Repcount'] = ReportListCount
-        context['Clocount'] = CloseListCount
-        context['Vercount'] = VerifiedListCount
+        AddUserCountsToContext(context, self.request.user)
         return context
-    # ---------------------------------------------------------------------
 
 
 class EditIssue(UpdateView):
@@ -104,29 +89,10 @@ class EditIssue(UpdateView):
             new_comment.save()
         return HttpResponseRedirect(self.object.get_absolute_url())
 
-    # ---------------------------------------------------------
     def get_context_data(self, **kwargs):
         context = super(EditIssue, self).get_context_data(**kwargs)
-        AssigneeListCount = it_models.Issue.objects.filter(
-            assignee=self.request.user).filter(
-                status__in=[x[0] for x in it_models.OPEN_STATUSES]).count()
-
-        ReportListCount = it_models.Issue.objects.filter(
-            reporter=self.request.user).order_by('-pk').count()
-
-        CloseListCount = it_models.Issue.objects.filter(
-            status__in=[x[0] for x in it_models.CLOSED_STATUSES]).order_by(
-                '-closed_date').count()
-
-        VerifiedListCount = it_models.Issue.objects.filter(
-            verifier=self.request.user).order_by('-pk').count()
-
-        context['Asscount'] = AssigneeListCount
-        context['Repcount'] = ReportListCount
-        context['Clocount'] = CloseListCount
-        context['Vercount'] = VerifiedListCount
+        AddUserCountsToContext(context, self.request.user)
         return context
-    # ----------------------------------------------------------
 
 
 class ViewIssue(DetailView, FormMixin):
@@ -142,22 +108,7 @@ class ViewIssue(DetailView, FormMixin):
         # context['form'] = forms.CommentForm
         context['form'] = self.get_form(form_class)
 
-        # ---------------------------------------------------------------
-        AssigneeListCount = it_models.Issue.objects.filter(
-            assignee=self.request.user).filter(
-                status__in=[x[0] for x in it_models.OPEN_STATUSES]).count()
-        ReportListCount = it_models.Issue.objects.filter(
-            reporter=self.request.user).order_by('-pk').count()
-        CloseListCount = it_models.Issue.objects.filter(
-            status__in=[x[0] for x in it_models.CLOSED_STATUSES]).order_by(
-                '-closed_date').count()
-        VerifiedListCount = it_models.Issue.objects.filter(
-            verifier=self.request.user).order_by('-pk').count()
-        context['Asscount'] = AssigneeListCount
-        context['Repcount'] = ReportListCount
-        context['Clocount'] = CloseListCount
-        context['Vercount'] = VerifiedListCount
-        # ------------------------------------------------------------------
+        AddUserCountsToContext(context, self.request.user)
         return context
 
     def get_success_url(self):
@@ -190,25 +141,10 @@ class SearchIssues(FormView):
     template_name = 'search.html'
     success_url = '/qissue/search/'
 
-    # ------------------------------------------------------------------
     def get_context_data(self, **kwargs):
         context = super(SearchIssues, self).get_context_data(**kwargs)
-        AssigneeListCount = it_models.Issue.objects.filter(
-            assignee=self.request.user).filter(
-                status__in=[x[0] for x in it_models.OPEN_STATUSES]).count()
-        ReportListCount = it_models.Issue.objects.filter(
-            reporter=self.request.user).order_by('-pk').count()
-        CloseListCount = it_models.Issue.objects.filter(
-            status__in=[x[0] for x in it_models.CLOSED_STATUSES]).order_by(
-                '-closed_date').count()
-        VerifiedListCount = it_models.Issue.objects.filter(
-            verifier=self.request.user).order_by('-pk').count()
-        context['Asscount'] = AssigneeListCount
-        context['Repcount'] = ReportListCount
-        context['Clocount'] = CloseListCount
-        context['Vercount'] = VerifiedListCount
+        AddUserCountsToContext(context, self.request.user)
         return context
-    # ------------------------------------------------------------------
 
     def form_valid(self, form, **kwargs):
         data = filters.filter_issue_results(form.cleaned_data)
@@ -247,31 +183,11 @@ class SearchIssues(FormView):
 class MultipleIssues(ListView):
     model = it_models.Issue
     template_name = 'multi_issue.html'
-    # -------------------------------------------------------------------
 
     def get_context_data(self, **kwargs):
         context = super(MultipleIssues, self).get_context_data(**kwargs)
-        AssigneeListCount = it_models.Issue.objects.filter(
-            assignee=self.request.user).filter(
-                status__in=[x[0] for x in it_models.OPEN_STATUSES]).count()
-
-        ReportListCount = it_models.Issue.objects.filter(
-            reporter=self.request.user).order_by('-pk').count()
-
-        CloseListCount = it_models.Issue.objects.filter(
-            status__in=[x[0] for x in it_models.CLOSED_STATUSES]).order_by(
-                '-closed_date').count()
-
-        VerifiedListCount = it_models.Issue.objects.filter(
-            verifier=self.request.user).order_by('-pk').count()
-
-        context['Asscount'] = AssigneeListCount
-        context['Repcount'] = ReportListCount
-        context['Clocount'] = CloseListCount
-        context['Vercount'] = VerifiedListCount
-
+        AddUserCountsToContext(context, self.request.user)
         return context
-    # ---------------------------------------------------------------------
 
 
 class AssigneeListIssuesView(MultipleIssues):
@@ -306,3 +222,25 @@ class VerifiedListIssuesView(MultipleIssues):
         queryset = it_models.Issue.objects.filter(
             verifier=self.request.user).order_by('-pk')
         return queryset
+
+def AddUserCountsToContext(context, user):
+    """Add user counts to the context. 
+
+    This work serves to add various different counts to the context so that
+    the left sidebar can display the counts specific to each user.  Please note
+    that this method adds 4 new elements to the context dict.
+
+    Args:
+      context: The context dictionary for the request.
+      user: The use object provided with the request.
+    """
+    context['Asscount'] = it_models.Issue.objects.filter(
+        assignee=user).filter(
+            status__in=[x[0] for x in it_models.OPEN_STATUSES]).count()
+    context['Repcount'] = it_models.Issue.objects.filter(
+        reporter=user).order_by('-pk').count()
+    context['Clocount'] = it_models.Issue.objects.filter(
+        status__in=[x[0] for x in it_models.CLOSED_STATUSES]).order_by(
+            '-closed_date').count()
+    context['Vercount'] = it_models.Issue.objects.filter(
+        verifier=user).order_by('-pk').count()
