@@ -33,9 +33,9 @@ app.use(multer({
 app.post('/upload', function(req,res){
 	if (done==true) {
 		var hash = crypto.randomBytes(20).toString('hex');
-		fs.mkdir( util.format('static/uploads/%s', hash), function(){
+		fs.mkdir( util.format('/home/pgmvt/sites/pre.3blueprints.com/static/uploads/%s', hash), function(){
 			var final_path = util.format('static/uploads/%s/%s', hash, req.files.fileUpload.originalname);
-			fs.rename(req.files.fileUpload.path, final_path);
+			fs.rename(req.files.fileUpload.path, '/home/pgmvt/sites/pre.3blueprints.com/' + final_path);
 			res.send(final_path);
 		});
 	}
