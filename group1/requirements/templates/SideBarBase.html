@@ -17,7 +17,10 @@
 
             {% for aproject in projects %}
             <li>
-                <a href="javascript:void(0);" data-toggle="collapse" data-target="#proj_{{ aproject.id }}">
+                <a  href="javascript:void(0);" 
+                    data-toggle="collapse" 
+                    data-target="#proj_{{ aproject.id }}"
+                    data-proj-sidebar="{{ aproject.title }}" >
                     <i class="fa fa-fw fa-briefcase"></i> {{ aproject.title }} <i class="fa fa-fw fa-caret-down"></i>
                 </a>
                 {% ifequal aproject.id project.id %}
@@ -38,7 +41,10 @@
                         <a href="/req/projectdetail/{{ aproject.id }}"><i class="fa fa-fw fa-list-alt"></i> Project Detail</a>
                     </li>
                     <li>
-                        <a href="javascript:void(0);" data-toggle="collapse" data-target="#proj_{{ aproject.id }}_iters">
+                        <a  href="javascript:void(0);" 
+                            data-toggle="collapse" 
+                            data-target="#proj_{{ aproject.id }}_iters"
+                            data-load-iter="{{ aproject.title }}">
                             <i class="fa fa-fw fa-tasks"></i> Iterations <i class="fa fa-fw fa-caret-down"></i>
                         </a> 
                         {% if iteration == None %}
@@ -53,10 +59,18 @@
                             {% comment "No Use" %}
                             <li><a href="/req/iterationdetail/{{ aproject.id }}/0"><i class="fa fa-fw fa-calendar"></i> Ice Box</a></li>
                             {% for aiteration in aproject.get_iterations %}
-                            <li><a href="/req/iterationdetail/{{ aproject.id }}/{{ aiteration.id }}"><i class="fa fa-fw fa-calendar"></i> {{ aiteration.title }}</a></li>
+                            <li>
+                                <a href="/req/iterationdetail/{{ aproject.id }}/{{ aiteration.id }}">
+                                    <i class="fa fa-fw fa-calendar"></i> 
+                                        {{ aiteration.title }}
+                                </a>
+                            </li>
                             {% endfor %}
                             {% if canOwnProject %}
-                            <li><a href="javascript:void(0);" onclick="showDialog('/req/newiteration/{{ aproject.id }}');"><i class="fa fa-fw fa-plus"></i> New Iteration</a></li>
+                            <li><a href="javascript:void(0);" onclick="showDialog('/req/newiteration/{{ aproject.id }}');"><i class="fa fa-fw fa-plus"></i>
+                                New Iteration
+                                </a>
+                            </li>
                             {% endif %}
                             {% endcomment %}
                         </ul>

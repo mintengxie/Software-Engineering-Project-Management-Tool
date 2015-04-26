@@ -147,12 +147,23 @@
 								            <div class="panel-heading">
 								                <h4 class="panel-title">
 								                	<span id="storypoint_{{ story.id }}"></span>
-								                    <a data-toggle="collapse" data-parent="" href="#story_{{ story.id }}" aria-expanded="true" class="">{{ story.title }}</a>
+								                    <a  data-toggle="collapse" 
+								                        data-story="{{ story.title }}"
+								                        data-parent="" 
+								                        href="#story_{{ story.id }}" 
+								                        aria-expanded="true" 
+								                        class="">{{ story.title }}
+								                    </a>
 
 								                    {% check_permission association project "MoveStoryToIteration" as can_move_story %}
 								                    {% if can_move_story %}
             	    	    	                    <div class="btn-group pull-right">
-            	    	    	                    	<button class="btn btn-default dropdown-toggle pull-right" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+            	    	    	                    	<button class="btn btn-default dropdown-toggle pull-right" 
+            	    	    	                    	        type="button" 
+            	    	    	                    	        id="dropdownMenu1" 
+            	    	    	                    	        data-toggle="dropdown" 
+            	    	    	                    	        data-move-story="{{ story.title }}"
+            	    	    	                    	        aria-expanded="true">
             	    	    	                    		Move
             	    	    	                        	<span class="caret"></span>
             	    	    	                      	</button>
@@ -171,14 +182,21 @@
                                                     
                                                     {% check_permission association project "DeleteStory" as can_delete %} 
                                                     {% if can_delete %}
-													<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showDialog('/req/deletestory/{{ project.id }}/{{ story.id }}');">
-            	    	    	                    	<i class="fa fa-trash-o fa-fw"></i>Delete
+													<a class="btn btn-link pull-right" 
+													   href="javascript:void(0);" 
+													   data-del-story="{{ story.title }}"
+													   onclick="showDialog('/req/deletestory/{{ project.id }}/{{ story.id }}');">
+            	    	    	                         <i class="fa fa-trash-o fa-fw"></i>
+            	    	    	                         Delete
             	    	    	                	</a>
             	    	    	                	{% endif %}
             	    	    	                	
             	    	    	                	{% check_permission association project "EditStory" as can_edit %} 
 													{% if can_edit %}
-            	    	    	                    <a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showDialog('/req/editstory/{{ project.id }}/{{ story.id }}');">
+            	    	    	                    <a class="btn btn-link pull-right" 
+            	    	    	                       href="javascript:void(0);" 
+            	    	    	                       data-edit-story="{{ story.title }}"
+            	    	    	                       onclick="showDialog('/req/editstory/{{ project.id }}/{{ story.id }}');">
             	    	    	                    	<i class="fa fa-edit fa-fw"></i>Edit
             	    	    	                	</a> 
             	    	    	                	{% endif %}
