@@ -233,26 +233,27 @@ http {
 sudo service nginx restart
 #**********************TRACKER PM SETUP***************************************************
 ###################make sure you replace 'dev', with 'pre' or 'pro' or 'www' as needed
-export SITENAME=dev.3blueprints.com
+export SITENAME=www.3blueprints.com
 ###################
 mkdir -p ~/sites/$SITENAME/database
 mkdir -p ~/sites/$SITENAME/source
 mkdir -p ~/sites/$SITENAME/static
 mkdir -p ~/sites/$SITENAME/virtualenv
 ###################
-git clone https://github.com/CS673S15-Group1/Final_Project ~/sites/$SITENAME/source/Final_Project
+git clone https://github.com/CS673S15-Group1/Final_Project ~/sites/$SITENAME/source/
 ###################
 virtualenv --python=python2.7 ~/sites/$SITENAME/virtualenv
 ###################
-~/sites/$SITENAME/virtualenv/bin/pip2.7 install -r ~/sites/$SITENAME/source/Final_Project/group1/dependencies.txt
+~/sites/$SITENAME/virtualenv/bin/pip2.7 install -r ~/sites/$SITENAME/source/dependencies.txt
 ###################
-~/sites/$SITENAME/virtualenv/bin/python2.7 ~/sites/$SITENAME/source/Final_Project/group1/manage.py migrate
+~/sites/$SITENAME/virtualenv/bin/python2.7 ~/sites/$SITENAME/source/group1/manage.py makemigrations
+~/sites/$SITENAME/virtualenv/bin/python2.7 ~/sites/$SITENAME/source/group1/manage.py migrate
 #edit the file into the sites-available of nginx
 sudo vim /usr/local/nginx/sites-available/$SITENAME
 #add the following configuration
 server {
     listen 80;
-    server_name dev.3blueprints.com;
+    server_name www.3blueprints.com;
     
     location / {
         proxy_pass http://localhost:8000;
@@ -262,50 +263,68 @@ server {
 sudo ln -s /usr/local/nginx/sites-available/$SITENAME /usr/local/nginx/sites-enabled/$SITENAME
 #restart nginx
 sudo service nginx restart
-###################; visit http://dev.3blueprints.com
-~/sites/$SITENAME/virtualenv/bin/python2.7 ~/sites/$SITENAME/source/Final_Project/group1/manage.py runserver
+###################; visit http://www.3blueprints.com
+~/sites/$SITENAME/virtualenv/bin/python2.7 ~/sites/$SITENAME/source/group1/manage.py runserver
 #change directory to where the wsgi application from django is placed
-cd ~/sites/$SITENAME/source/Final_Project/group1
-#test that gunicorn runs; visit http://dev.3blueprints.com
-sudo ../../../virtualenv/bin/gunicorn group1.wsgi:application
+cd ~/sites/$SITENAME/source/group1
+#test that gunicorn runs; visit http://www.3blueprints.com
+sudo ../../virtualenv/bin/gunicorn group1.wsgi:application
 #to make nginx serve static files edit the following file 
 sudo vim /usr/local/nginx/sites-available/$SITENAME
 #replace with the following lines
 server {
     listen 80;
-    server_name dev.3blueprints.com;
-    
+    server_name www.3blueprints.com;
+
     location / {
-        proxy_set_header Host $host;
-        proxy_pass http://unix:/tmp/dev.3blueprints.com.socket;
+        proxy_pass http://localhost:8000;
     }
-    
+
     location /static {
-    alias /home/pgmvt/sites/dev.3blueprints.com/static;
-    }
+        alias /home/pgmvt/sites/www.3blueprints.com/static;
+     }
 }
 #reload nginx
 sudo service nginx reload
-#restart gunicorn to test (with socket binding); visit http://dev.3blueprints.com
-sudo ../../../virtualenv/bin/gunicorn --bind unix:/tmp/dev.3blueprints.com.socket group1.wsgi:application
-#finally we automate the gunicorn by using ubuntu's upstart init
-sudo vim /etc/init/gunicorn-dev.3.blueprints.com.conf
-#add the following lines
+#restart gunicorn to test (with static service); visit http://www.3blueprints.com
+sudo ../../../virtualenv/bin/gunicorn --bind unix:/tmp/www.3blueprints.com.socket group1.wsgi:application
+#to make nginx use sockets
+sudo vim /usr/local/nginx/sites-available/$SITENAME
+#replace with the following lines
+server {
+    listen 80;
+    server_name www.3blueprints.com;
 
-description "Gunicorn server for dev.3blueprints.com"
+    location / {
+        proxy_set_header Host $host;
+        proxy_pass http://unix:/tmp/www.3blueprints.com.socket;
+    }
+
+    location /static {
+        alias /home/pgmvt/sites/www.3blueprints.com/static;
+     }
+}
+#reload nginx
+sudo service nginx reload
+#restart gunicorn to test (with socket binding); visit http://www.3blueprints.com
+sudo ../../../virtualenv/bin/gunicorn --bind unix:/tmp/www.3blueprints.com.socket group1.wsgi:application
+#finally we automate the gunicorn by using ubuntu's upstart init
+sudo vim /etc/init/gunicorn-www.3blueprints.com.conf
+#add the following lines
+description "Gunicorn server for www.3blueprints.com"
 
 start on net-device-up
 stop on shutdown
 
 respawn
 
-setuid pgmvt
-chdir /home/pgmvt/sites/dev.3blueprints.com/source/Final_Project/group1
+setuid root
+chdir /home/pgmvt/sites/www.3blueprints.com/source/group1
 
-exec ../../../virtualenv/bin/gunicorn --bind unix:/tmp/dev.3blueprints.com.socket group1.wsgi:application
+exec ../../virtualenv/bin/gunicorn --bind unix:/tmp/www.3blueprints.com.socket group1.wsgi:application
 
 #start gunicorn (will comeback up if machine goes down
-sudo start gunicorn-dev.3blueprints.com
+sudo start gunicorn-www.3blueprints.com
 
 #**********************INSTALL MYSQL5.6***************************************************
 #add user for programming enviroment
