@@ -46,7 +46,7 @@ class EditIssue(UpdateView):
         if form.has_changed():
             current_issue = form.save(commit=False)
             text = ['Issue is modified:']
-            object = it_models.Issue.objects.get(pk=self.object.pk)
+            issue = it_models.Issue.objects.get(pk=self.object.pk)
             for field_name, field in form.fields.items():
                 if field_name in form.changed_data:
                     # if field_name in ['assignee', 'verifier']:
@@ -55,29 +55,31 @@ class EditIssue(UpdateView):
                     #         form.cleaned_data[field_name].username))
                     # I don't know how to make it more easy to read(Amy)
                     if field_name == 'assignee':
-                        if object.assignee is None:
-                            text.append('%s: old value(None) -> %s' % (
-                                field_name,
-                                form.cleaned_data[field_name].username))
+                        if issue.assignee is None:
+                            assignee = None
                         else:
-                            text.append('%s: old value(%s) -> %s' % (
-                                field_name,
-                                object.assignee.username,
-                                form.cleaned_data[field_name].username))
+                            assignee = issue.assignee.username
+                        if form.cleaned_data[field_name] is None:
+                            username = None
+                        else:
+                            username = form.cleaned_data[field_name].username
+                        text.append('%s: %s -> %s' % (
+                            field_name, assignee, username))
                     elif field_name == 'verifier':
-                        if object.verifier is None:
-                            text.append('%s: old value(None) -> %s' % (
-                                field_name,
-                                form.cleaned_data[field_name].username))
+                        if issue.verifier is None:
+                            verifier = None
                         else:
-                            text.append('%s: old value(%s) -> %s' % (
-                                field_name,
-                                object.verifier.username,
-                                form.cleaned_data[field_name].username))
+                            verifier = issue.verifier.username
+                        if form.cleaned_data[field_name] is None:
+                            username = None
+                        else:
+                            username = form.cleaned_data[field_name].username
+                        text.append('%s: %s -> %s' % (
+                            field_name, verifier, username))
                     else:
-                        text.append('%s: old value(%s) -> %s' % (
+                        text.append('%s: %s -> %s' % (
                             field_name,
-                            getattr(object, field_name),
+                            getattr(issue, field_name),
                             form.cleaned_data[field_name]))
 
             current_issue.save()
@@ -139,7 +141,7 @@ class ViewIssue(DetailView, FormMixin):
 class SearchIssues(FormView):
     form_class = forms.SearchForm
     template_name = 'search.html'
-    success_url = '/qissue/search/'
+    success_url = '/issue/search/'
 
     def get_context_data(self, **kwargs):
         context = super(SearchIssues, self).get_context_data(**kwargs)
