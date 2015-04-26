@@ -8,6 +8,7 @@ from django.db import IntegrityError
 from issue_tracker import models as it_models
 from requirements.models import project_api
 from requirements.models import project as project_model
+from requirements.models import user_association as user_association_model
 
 USERS = (('Mike', 'Bibriglia', 'mbibrigl',),
          ('Bill', 'Cosby', 'bcosby',),
@@ -18,7 +19,26 @@ USERS = (('Mike', 'Bibriglia', 'mbibrigl',),
          ('Tina', 'Fey', 'thirtyrockfey',),
          ('George', 'Carlin', 'gcarlin',),
          ('Jonny', 'Carson', 'jcarson',),
-         ('George', 'Burns', 'jburns',),)
+         ('George', 'Burns', 'jburns',),
+         ('Whitney', 'Cummings', 'whitcummings',),
+         ('Daniel', 'Tosh', 'tosho',),
+         ('Kevin', 'Hart', 'khart',),
+         ('Lucille', 'Ball', 'lball',),
+         ('Rosanne', 'Barr', 'rbarr',),
+         ('Billy', 'Crystal', 'bcrystal',),
+         ('Robin', 'Williams', 'aladin',),
+         ('Jim', 'Carrey', 'mask4ever',),
+         ('Dave', 'Chappelle', 'threeseason',),
+         ('Ellen', 'DeGeneres', 'ellen',),
+         ('Jeff', 'Foxworthy', 'mightberedneck',),
+         ('Zach', 'Galifanakis', 'twoferns',),
+         ('Whoopi', 'Goldberg', 'whoopi',),
+         ('Jimmy', 'Fallon', 'fallon',),
+         ('Andy', 'Kaufman', 'manonmoon',),
+         ('Jay', 'Leno', 'leno',),
+         ('Denis', 'Leary', 'dleary',),
+         ('Steve', 'Martin', 'crazywildguy',),
+         )
 
 DESCRIPTIONS = (
     "Everybody let's go. Go. \nJump up, wiggle and giggle with the "
@@ -150,15 +170,8 @@ def create_issues(number_of_issues, out_handle=None):
       num: The number of issues to be created.
       out_handle: The output handler for printing.
     """
-    # This extra work for user ids is necessary due to the fact that the
-    # database might have been wiped, but the origin pk for the user still
-    # has been claimed, so we must gather the current pk list to apply them
-    # to create issues.
-    user_ids = []
-    for user in User.objects.all():
-        user_ids.append(user.pk)
     project_ids = []
-    for project in project_model.Project.objects.all():
+    for project in project_api.get_all_projects():
         project_ids.append(project.pk)
     title_count = len(TITLES) - 1
     description_count = len(DESCRIPTIONS) - 1
@@ -172,11 +185,22 @@ def create_issues(number_of_issues, out_handle=None):
         # with any status other than new, it has been assigned to someone.
         status = it_models.STATUSES[
             random.randint(0, len(it_models.STATUSES) - 1)][0]
+        p = project_api.get_project(
+            project_ids[random.randint(0, len(project_ids) - 1)])
+        # Limit the users to the developers on the project
+        user_ids = [user_ass.user.pk
+                    for user_ass in project_api.get_project_users(p.id)]
         if status != 'new':
             assignee = User.objects.get(
                 pk=user_ids[random.randint(0, len(user_ids) - 1)])
         else:
             assignee = None
+        if random.randint(0, 1):
+            verifier = None
+        else:
+            verifier = User.objects.get(
+                pk=user_ids[random.randint(0, len(user_ids) - 1)])
+
         issue = it_models.Issue.objects.create(
             title=TITLES[random.randint(0, title_count)],
             description=DESCRIPTIONS[
@@ -186,13 +210,13 @@ def create_issues(number_of_issues, out_handle=None):
             status=status,
             priority=it_models.PRIORITIES[
                 random.randint(0, len(it_models.PRIORITIES) - 1)][0],
-            project=project_model.Project.objects.get(
-                id=project_ids[random.randint(0, len(project_ids) - 1)]),
+            project=p,
             modified_date=get_random_date(),
             submitted_date=get_random_date(),
             reporter=User.objects.get(
                 pk=user_ids[random.randint(0, len(user_ids) - 1)]),
             assignee=assignee,
+            verifier=verifier,
             )
         comment_count = len(COMMENTS) - 1
         for _ in xrange(1, random.randint(1, 10)):
@@ -239,8 +263,18 @@ def create_projects(number_of_projects, out_handle=None):
                       PROJECTS[random.randint(0, project_count)][0],
                       i),
                   'description': PROJECTS[random.randint(0, project_count)][1]}
-        project_api.create_project(user=_get_random_user(user_ids),
-                                   fields=fields)
+        excluded_users = [_get_random_user(user_ids)]
+        p = project_api.create_project(user=excluded_users[0],
+                                       fields=fields)
+
+        # Now associate some number of developers to the project.
+        for _ in xrange(random.randint(1, 5)):
+            # Remove the users already associated with the project
+            ids = set(user_ids) - set([user.pk for user in excluded_users]) 
+            u = _get_random_user(list(ids))
+            excluded_users.append(u)
+            project_api.add_user_to_project(
+                p.id, u.username, user_association_model.ROLE_DEVELOPER)
 
     if out_handle:
         out_handle.write('\n')
