@@ -2,7 +2,7 @@ import django_filters
 from django.shortcuts import render
 from django.http import HttpResponse
 from comm.models import User, Room, Message, UserRoom
-from rest_framework import viewsets, generics
+from rest_framework import viewsets, generics, filters
 from comm.serializers import UserSerializer, RoomSerializer, MessageSerializer, MessageDataSerializer, UserRoomSerializer, UserRoomDataSerializer
 from django.contrib.auth.decorators import login_required
 import random
@@ -58,3 +58,9 @@ class UserRoomDataViewSet(viewsets.ReadOnlyModelViewSet):
 	queryset = UserRoom.objects.all()
 	serializer_class = UserRoomDataSerializer
 	filter_class = UserRoomFilter
+
+class MessageSearchSet(viewsets.ReadOnlyModelViewSet):
+	queryset=Message.objects.all().order_by('time')
+	serializer_class=MessageDataSerializer
+  	filter_backends=(filters.SearchFilter,)
+	search_fields=('text','time')

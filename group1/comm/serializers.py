@@ -1,5 +1,5 @@
 from comm.models import User, Room, Message, UserRoom
-from rest_framework import routers, serializers, viewsets
+from rest_framework import routers, serializers, viewsets, filters
 
 # Get list of online users
 # Get last 100 messages
