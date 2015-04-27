@@ -105,14 +105,18 @@
 									</a>
                                     {% check_permission association project "DeleteIteration" as can_delete_iter %} 
                                     {% if can_delete_iter %}
-									<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showDialog('/req/deleteiteration/{{ project.id }}/{{ iteration.id }}');">
+                                    <!-- data-del-iterations added for ui testing-->
+									<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showDialog('/req/deleteiteration/{{ project.id }}/{{ iteration.id }}');"
+									data-del-iteration = "{{ iteration.title}}">
 										<i class="glyphicon glyphicon-remove"></i>
 									</a>
 									{% endif %}
 
                                     {% check_permission association project "EditIteration" as can_edit_iter %} 
                                     {% if can_edit_iter %}
-									<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showDialog('/req/edititeration/{{ project.id }}/{{ iteration.id }}');">
+                                    <!-- data-edit-iterations added for ui testing-->
+									<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showDialog('/req/edititeration/{{ project.id }}/{{ iteration.id }}');"
+									data-edit-iteration = "{{ iteration.title}}">
 										<i class="glyphicon glyphicon-edit"></i>
 									</a>
 									{% endif %}
