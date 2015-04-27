@@ -381,20 +381,26 @@ $(document).ready(function(){
 
 $(document).ready(function(){
  function get_search_results() {
-   $("searchResults").val("");
-   var queryString = $("#search_box").val();
-   var message_endpoint = 'http://' + server_host + '/api/messagesearch/?search=' + queryString;
-   $.getJSON(message_endpoint, function(data){
-     data.forEach(function(msg){
-       $("#searchResults").append('<b>User:</b> ' + msg.user.username + '<br>' +
-                '<b>Room:</b> ' + msg.room.roomname + '<br>' +
-                '<b>Time:</b> ' + msg.time + '<br>' +
-                '<b>Message:</b> ' + msg.text + '<br>' +
-                '<br>');
+     $("searchResults").val("");
+     var queryString = $("#search_box").val();
+     var message_endpoint = 'http://' + server_host + '/api/messagesearch/?search=' + queryString;
+     $.getJSON(message_endpoint, function(data){
+       data.forEach(function(msg){
+         console.log(msg);
+         if (msg.text.indexOf('::') != -1) {
+           console.log('emoji found')
+           Object.getOwnPropertyNames(emoji_image).forEach( function(emoji){ msg.text = msg.text.replace(emoji, emoji_image[emoji]); });
+         }
+         $("#searchResults").append('<b>User:</b> ' + msg.user.username + '<br>' +
+                  '<b>Room:</b> ' + msg.room.name + '<br>' +
+                  '<b>Time:</b> ' + new Date(msg.time) + '<br>' +
+                  '<b>Message:</b> ' + msg.text.slice(msg.user.username.length + 2) + '<br>' +
+                  '<br>');
+       });
      });
-   });
-   $("#searchModal").modal('show');
-   $("#search_box").val("");
+     $("#searchModal").modal('show');
+     $('#searchResults').text('');
+     $("#search_box").val("");
  }
 
  $("#search_box").keyup(function (e) {
