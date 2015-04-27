@@ -67,7 +67,8 @@ class TestProjects(unittest.TestCase):
         driver.find_element_by_link_text("Create Project").click()
         driver.find_element_by_xpath("//a[contains(@data-open-proj, 'Another Selenium Generated Project')]").click()
         driver.find_element_by_xpath("//div[@id='page-wrapper']/div[2]/div[2]/div/div/div/h2/a[2]/i").click()
-        driver.find_element_by_link_text("Add").click()
+        #add user bob
+        driver.find_element_by_xpath("//li[contains(.,'bob')]/span/a").click()  
         time.sleep(1)
         driver.find_element_by_link_text("Close").click()
         driver.find_element_by_link_text("admin").click()
