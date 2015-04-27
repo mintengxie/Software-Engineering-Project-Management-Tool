@@ -47,13 +47,13 @@ class TestIterations(unittest.TestCase):
         driver.find_element_by_xpath("//div[@id='id_start_date_popover']/div/span/i").click()
         for i in range(60):
             try:
-                if self.is_element_present(By.XPATH, "//tr[5]/td[4]"): break
+                if self.is_element_present(By.XPATH, "//tr[1]/td[4]"): break
             except: pass
             time.sleep(1)
         else: self.fail("time out")
-        driver.find_element_by_xpath("//tr[5]/td[4]").click()
+        driver.find_element_by_xpath("//tr[1]/td[4]").click()
         driver.find_element_by_xpath("//div[@id='id_end_date_popover']/div/span").click()
-        driver.find_element_by_xpath("//div[5]/div[3]/table/tbody/tr[5]/td[5]").click()
+        driver.find_element_by_xpath("//div[5]/div[3]/table/tbody/tr[2]/td[4]").click()
         driver.find_element_by_link_text("Create").click()
         time.sleep(1)
         driver.find_element_by_link_text("Dashboard").click()
@@ -74,14 +74,13 @@ class TestIterations(unittest.TestCase):
         driver.find_element_by_xpath("//div[@id='id_start_date_popover']/div/span/i").click()
         for i in range(60):
             try:
-                if self.is_element_present(By.XPATH, "//tr[5]/td[4]"): break
+                if self.is_element_present(By.XPATH, "//tr[1]/td[4]"): break
             except: pass
             time.sleep(1)
         else: self.fail("time out")
-        driver.find_element_by_xpath("//tr[5]/td[4]").click()
+        driver.find_element_by_xpath("//tr[1]/td[4]").click()
         driver.find_element_by_xpath("//div[@id='id_end_date_popover']/div/span").click()
-        driver.find_element_by_xpath("//div[5]/div[3]/table/thead/tr/th[3]").click()
-        driver.find_element_by_xpath("//div[5]/div[3]/table/tbody/tr[5]/td[5]").click()
+        driver.find_element_by_xpath("//div[5]/div[3]/table/tbody/tr[2]/td[4]").click()
         driver.find_element_by_link_text("Create").click()
         time.sleep(1)
         driver.find_element_by_xpath("//a[contains(@data-open-proj, 'Selenium Test Iteration create, edit and delete')]").click()
@@ -95,13 +94,13 @@ class TestIterations(unittest.TestCase):
         driver.find_element_by_xpath("//div[@id='id_start_date_popover']/div/span/i").click()
         for i in range(60):
             try:
-                if self.is_element_present(By.XPATH, "//tr[3]/td[4]"): break
+                if self.is_element_present(By.XPATH, "//tr[1]/td[4]"): break
             except: pass
             time.sleep(1)
         else: self.fail("time out")
-        driver.find_element_by_xpath("//tr[3]/td[4]").click()
+        driver.find_element_by_xpath("//tr[1]/td[4]").click()
         driver.find_element_by_xpath("//div[@id='id_end_date_popover']/div/span/i").click()
-        driver.find_element_by_xpath("//div[5]/div[3]/table/tbody/tr[3]/td[6]").click()
+        driver.find_element_by_xpath("//div[5]/div[3]/table/tbody/tr[2]/td[4]").click()
         driver.find_element_by_link_text("Save Changes").click()
         time.sleep(1)
         driver.find_element_by_xpath("//a[contains(@data-del-iteration, '2nd test iteration MODIFIED')]").click()
