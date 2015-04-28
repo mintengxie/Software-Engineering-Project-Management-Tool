@@ -18,10 +18,8 @@ groups pgvmt
 sudo apt-get update
 #install finger application
 sudo apt-get install finger
-
 #install tree application
 sudo apt-get install tree
-
 #check user attributes
 finger pgmvt
 #make directory for downloads
@@ -54,14 +52,6 @@ sudo -H pip2.7 install --upgrade pip
 #***************************SETUP VIRTUALENV*******************************************
 #install virtualenv
 sudo -H pip2.7 install virtualenv
-
-#create a virtual enviroment for you python27 django enviroment (not required with fabric build script - it builds its own virtual env within the sites directory)
-virtualenv -p /usr/local/bin/python2.7 /usr/local/py27dj
-#add pygrp for python group access
-##sudo groupadd pydjgrp
-#change py27dj into a directory accessible by pgmvt and pygrps users
-##sudo chown -R pgmvt:pydjgrp /usr/local/py27dj
-
 #*******************************SETUP GIT**********************************************
 #install dependencies
 sudo apt-get install libbz2-dev libcurl4-gnutls-dev libexpat1-dev gettext libz-dev libssl-dev build-essential libsqlite3-dev bzip2 libbz2-dev libncurses5-dev cmake bison libreadline-dev libxml2-dev libeditline-dev libaio-dev
@@ -83,10 +73,11 @@ curl -LOk https://raw.githubusercontent.com/git/git/master/contrib/completion/gi
 sudo vim ~/.bashrc
 #add the folowing lines
 source ~/git-completion.bash
-
 #update bashrc
 source ~/.bashrc
-
+#**********************INSTALL NODEJS***************************************************
+#install nodejs
+sudo apt-get install nodejs
 #**********************INSTALL NGINX***************************************************
 #install dependencies
 sudo apt-get install libc6 libpcre3 libssl0.9.8 zlib1g lsb-base libpcre3 libpcre3-dev
@@ -243,22 +234,22 @@ http {
 ################################################################################################################
 #restart the server
 sudo service nginx restart
-
-#**********************TRACKER PM SETUP***************************************************
-###################make sure you replace 'dev', with 'pre' or 'pro' or 'www' as needed
-export SITENAME=www.3blueprints.com
-###################
+#**********************3BLUEPRINTS PM SETUP***************************************************
+# export variable to remove searching for dev.3bleuprints site folder
+## make sure you replace 'dev', with 'pre' or 'pro' or 'www' as needed
+export SITENAME=dev.3blueprints.com
+# create directory structure
 mkdir -p ~/sites/$SITENAME/database
 mkdir -p ~/sites/$SITENAME/source
 mkdir -p ~/sites/$SITENAME/static
 mkdir -p ~/sites/$SITENAME/virtualenv
-###################
+# clone in project
 git clone https://github.com/CS673S15-Group1/Final_Project ~/sites/$SITENAME/source/
-###################
+# create virtual enviroment for project
 virtualenv --python=python2.7 ~/sites/$SITENAME/virtualenv
-###################
+# install dependencies
 ~/sites/$SITENAME/virtualenv/bin/pip2.7 install -r ~/sites/$SITENAME/source/dependencies.txt
-###################
+# create and run migrations
 ~/sites/$SITENAME/virtualenv/bin/python2.7 ~/sites/$SITENAME/source/group1/manage.py makemigrations
 ~/sites/$SITENAME/virtualenv/bin/python2.7 ~/sites/$SITENAME/source/group1/manage.py migrate
 #edit the file into the sites-available of nginx
@@ -266,7 +257,7 @@ sudo vim /usr/local/nginx/sites-available/$SITENAME
 #add the following configuration
 server {
     listen 80;
-    server_name www.3blueprints.com;
+    server_name dev.3blueprints.com;
     
     location / {
         proxy_pass http://localhost:8000;
@@ -277,60 +268,58 @@ sudo ln -s /usr/local/nginx/sites-available/$SITENAME /usr/local/nginx/sites-ena
 #restart nginx
 sudo service nginx restart
 ###################; visit http://www.3blueprints.com
+~/sites/$SITENAME/virtualenv/bin/python2.7 ~/sites/$SITENAME/source/group1/manage.py createsuperuser
 ~/sites/$SITENAME/virtualenv/bin/python2.7 ~/sites/$SITENAME/source/group1/manage.py runserver
 #change directory to where the wsgi application from django is placed
 cd ~/sites/$SITENAME/source/group1
-#test that gunicorn runs; visit http://www.3blueprints.com
+#test that gunicorn runs; visit http://www.3blueprints.com (no css/static files)
 sudo ../../virtualenv/bin/gunicorn group1.wsgi:application
 #to make nginx serve static files edit the following file 
 sudo vim /usr/local/nginx/sites-available/$SITENAME
 #replace with the following lines
 server {
     listen 80;
-    server_name www.3blueprints.com;
+    server_name dev.3blueprints.com;
 
     location / {
         proxy_pass http://localhost:8000;
     }
 
     location /static {
-        alias /home/pgmvt/sites/www.3blueprints.com/static;
+        alias /home/pgmvt/sites/dev.3blueprints.com/static;
      }
 }
+# send all django project static files to main static folder
+~/sites/$SITENAME/virtualenv/bin/python2.7 ~/sites/$SITENAME/source/group1/manage.py collectstatic
 #reload nginx
 sudo service nginx reload
 #restart gunicorn to test (with static service); visit http://www.3blueprints.com
-sudo ../../../virtualenv/bin/gunicorn --bind unix:/tmp/dev.3blueprints.com.socket group1.wsgi:application
+sudo ../../virtualenv/bin/gunicorn group1.wsgi:application
 #to make nginx use sockets
 sudo vim /usr/local/nginx/sites-available/$SITENAME
 #replace with the following lines
 server {
     listen 80;
-    server_name www.3blueprints.com;
+    server_name dev.3blueprints.com;
 
     location / {
-        proxy_pass_header Server;
-        proxy_set_header Host $http_host;
-        proxy_redirect off;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Scheme $scheme;
-        proxy_connect_timeout 10;
-        proxy_read_timeout 10;
-        proxy_pass http://unix:/tmp/www.3blueprints.com.socket;
+        proxy_set_header Host $host;
+        proxy_pass http://unix:/tmp/dev.3blueprints.com.socket;
     }
 
     location /static {
-        alias /home/pgmvt/sites/www.3blueprints.com/static;
+        alias /home/pgmvt/sites/dev.3blueprints.com/static;
      }
 }
 #reload nginx
 sudo service nginx reload
 #restart gunicorn to test (with socket binding); visit http://dev.3blueprints.com
-sudo ../../../virtualenv/bin/gunicorn --bind unix:/tmp/www.3blueprints.com.socket group1.wsgi:application
+sudo ../../virtualenv/bin/gunicorn --bind unix:/tmp/dev.3blueprints.com.socket group1.wsgi:application
+#**********************GUNICORN UPSTART CONFIG***************************************************
 #finally we automate the gunicorn by using ubuntu's upstart init
-sudo vim /etc/init/gunicorn-www.3blueprints.com.conf
+sudo vim /etc/init/gunicorn-dev.3blueprints.com.conf
 #add the following lines
-description "Gunicorn server for www.3blueprints.com"
+description "Gunicorn server for dev.3blueprints.com"
 
 start on net-device-up
 stop on shutdown
@@ -338,14 +327,31 @@ stop on shutdown
 respawn
 
 setuid root
-chdir /home/pgmvt/sites/www.3blueprints.com/source/group1
+chdir /home/pgmvt/sites/dev.3blueprints.com/source/group1
 
-exec ../../virtualenv/bin/gunicorn --bind unix:/tmp/www.3blueprints.com.socket group1.wsgi:application
+exec ../../virtualenv/bin/gunicorn --bind unix:/tmp/dev.3blueprints.com.socket group1.wsgi:application
 
 #start gunicorn (will comeback up if machine goes down
-sudo start gunicorn-www.3blueprints.com
+sudo stop gunicorn-dev.3blueprints.com
+sudo start gunicorn-dev.3blueprints.com
+#**********************NODEJS UPSTART CONFIG***************************************************
+#finally we automate the nodejs by using ubuntu's upstart init
+sudo vim /etc/init/nodejs-dev.3blueprints.com.conf
+#add the following lines
+description "NodeJS server for dev.3blueprints.com"
 
+start on net-device-up
+stop on shutdown
 
+respawn
+
+setuid root
+
+exec nodejs /home/pgmvt/sites/dev.3blueprints.com/source/group1/communication/node/main.js
+
+#start gunicorn (will comeback up if machine goes down
+sudo stop nodejs-dev.3blueprints.com
+sudo start nodejs-dev.3blueprints.com
 #**********************INSTALL MYSQL5.6***************************************************
 #add user for programming enviroment
 sudo adduser mysql
