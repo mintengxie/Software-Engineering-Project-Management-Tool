@@ -20,7 +20,7 @@ app.all('/*', function(req, res, next) {
 // just for file upload
 var done = false;
 app.use(multer({
-	'dest': '/home/pgmvt/sites/pre.3blueprints.com/static/',
+	'dest': '../../../../static/uploads',
 	onFileUploadStart: function(file) {
 		console.log(file.originalname + ' is starting...');
 	},
@@ -33,10 +33,10 @@ app.use(multer({
 app.post('/upload', function(req,res){
 	if (done==true) {
 		var hash = crypto.randomBytes(20).toString('hex');
-		fs.mkdir( util.format('/home/pgmvt/sites/pre.3blueprints.com/static/uploads/%s', hash), function(){
-			var final_path = util.format('static/uploads/%s/%s', hash, req.files.fileUpload.originalname);
-			fs.rename(req.files.fileUpload.path, '/home/pgmvt/sites/pre.3blueprints.com/' + final_path);
-			res.send(final_path);
+		fs.mkdir( util.format('../../../../static/uploads/%s', hash), function(){
+			var final_path = util.format('%s/%s', hash, req.files.fileUpload.originalname);
+			fs.rename(req.files.fileUpload.path, '../../../../static/uploads/' + final_path);
+			res.send('static/uploads/' + final_path);
 		});
 	}
 });
