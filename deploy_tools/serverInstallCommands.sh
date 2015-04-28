@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 #Tested on Ubuntu 14.04 LTS x64 - logged in as root
 #check os
 lsb_release -irc
