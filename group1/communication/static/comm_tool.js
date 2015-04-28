@@ -87,7 +87,6 @@ global.emit('user', {
 });
 
 global.on('room', function(room) { 
-	console.log('new room: ' + room.name);
 	add_new_room(room);
 });
 
@@ -108,7 +107,6 @@ function createTeamFunc() {
         },
         data: room_data,
         success: function(room) {
-            console.log(room);
             global.emit('room', room);
         },
     });
@@ -175,7 +173,6 @@ function visible_namespace() {
 
 // Called when button is clicked
 function display() {
-  console.log('sending message...');
   var message = {
     'username': user,
     'value': $('input#text').val(),
@@ -287,7 +284,7 @@ function add_new_room(room) {
 
      global_room_list.push(room);
      add_socket(room);
-
+     $('div#room-' + room.id).hide();
 }
 
 function populate_user_list() {
@@ -386,9 +383,7 @@ $(document).ready(function(){
      var message_endpoint = 'http://' + server_host + '/api/messagesearch/?search=' + queryString;
      $.getJSON(message_endpoint, function(data){
        data.forEach(function(msg){
-         console.log(msg);
          if (msg.text.indexOf('::') != -1) {
-           console.log('emoji found')
            Object.getOwnPropertyNames(emoji_image).forEach( function(emoji){ msg.text = msg.text.replace(emoji, emoji_image[emoji]); });
          }
          $("#searchResults").append('<b>User:</b> ' + msg.user.username + '<br>' +
