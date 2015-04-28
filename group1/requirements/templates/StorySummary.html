@@ -191,7 +191,12 @@
                                     type="hidden" 
                                     value="{{ tform.story.id }}" />
                             {% endif %}
-                            <a class="delete btn btn-link" href="#">
+                            <!-- 
+                                Added data-del-task attribute for ui test automation
+                            -->
+                            <a  class="delete btn btn-link" 
+                                href="#"
+                                data-del-task="{{ forloop.counter0}}">
                                 <i class="fa fa-trash-o fa-fw"></i>
                                  Delete
                             </a>

@@ -22,5 +22,12 @@
     </li>
     {% endfor %}
     {% if owns_project %}
-    <li><a href="javascript:void(0);" onclick="showDialog('/req/newiteration/{{ project.id }}');"><i class="fa fa-fw fa-plus"></i> New Iteration</a></li>
+    <li>
+        <a  href="javascript:void(0);"
+            data-new-iter="{{ project.title }}" 
+            onclick="showDialog('/req/newiteration/{{ project.id }}');">
+            <i class="fa fa-fw fa-plus"></i>
+            New Iteration
+        </a>
+    </li>
     {% endif %}
