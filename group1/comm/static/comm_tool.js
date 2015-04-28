@@ -101,7 +101,7 @@ function createTeamFunc() {
 
     $.ajax({
         type: 'POST',
-        url: 'http://pre.3blueprints.com/api/rooms/',
+        url: 'http://' + server_host + '/api/rooms/',
         beforeSend: function (request) {
             request.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
         },
