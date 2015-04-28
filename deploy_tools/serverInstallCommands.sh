@@ -18,8 +18,10 @@ groups pgvmt
 sudo apt-get update
 #install finger application
 sudo apt-get install finger
+
 #install tree application
 sudo apt-get install tree
+
 #check user attributes
 finger pgmvt
 #make directory for downloads
@@ -52,6 +54,14 @@ sudo -H pip2.7 install --upgrade pip
 #***************************SETUP VIRTUALENV*******************************************
 #install virtualenv
 sudo -H pip2.7 install virtualenv
+
+#create a virtual enviroment for you python27 django enviroment (not required with fabric build script - it builds its own virtual env within the sites directory)
+virtualenv -p /usr/local/bin/python2.7 /usr/local/py27dj
+#add pygrp for python group access
+##sudo groupadd pydjgrp
+#change py27dj into a directory accessible by pgmvt and pygrps users
+##sudo chown -R pgmvt:pydjgrp /usr/local/py27dj
+
 #*******************************SETUP GIT**********************************************
 #install dependencies
 sudo apt-get install libbz2-dev libcurl4-gnutls-dev libexpat1-dev gettext libz-dev libssl-dev build-essential libsqlite3-dev bzip2 libbz2-dev libncurses5-dev cmake bison libreadline-dev libxml2-dev libeditline-dev libaio-dev
@@ -73,8 +83,10 @@ curl -LOk https://raw.githubusercontent.com/git/git/master/contrib/completion/gi
 sudo vim ~/.bashrc
 #add the folowing lines
 source ~/git-completion.bash
+
 #update bashrc
 source ~/.bashrc
+
 #**********************INSTALL NGINX***************************************************
 #install dependencies
 sudo apt-get install libc6 libpcre3 libssl0.9.8 zlib1g lsb-base libpcre3 libpcre3-dev
@@ -231,6 +243,7 @@ http {
 ################################################################################################################
 #restart the server
 sudo service nginx restart
+
 #**********************TRACKER PM SETUP***************************************************
 ###################make sure you replace 'dev', with 'pre' or 'pro' or 'www' as needed
 export SITENAME=www.3blueprints.com
@@ -296,7 +309,13 @@ server {
     server_name www.3blueprints.com;
 
     location / {
-        proxy_set_header Host $host;
+        proxy_pass_header Server;
+        proxy_set_header Host $http_host;
+        proxy_redirect off;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Scheme $scheme;
+        proxy_connect_timeout 10;
+        proxy_read_timeout 10;
         proxy_pass http://unix:/tmp/www.3blueprints.com.socket;
     }
 
@@ -325,6 +344,7 @@ exec ../../virtualenv/bin/gunicorn --bind unix:/tmp/www.3blueprints.com.socket g
 
 #start gunicorn (will comeback up if machine goes down
 sudo start gunicorn-www.3blueprints.com
+
 
 #**********************INSTALL MYSQL5.6***************************************************
 #add user for programming enviroment
