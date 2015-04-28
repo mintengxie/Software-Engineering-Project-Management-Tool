@@ -7,7 +7,6 @@ from django.contrib.auth.models import User
 from django.db import IntegrityError
 from issue_tracker import models as it_models
 from requirements.models import project_api
-from requirements.models import project as project_model
 from requirements.models import user_association as user_association_model
 
 USERS = (('Mike', 'Bibriglia', 'mbibrigl',),
@@ -270,7 +269,7 @@ def create_projects(number_of_projects, out_handle=None):
         # Now associate some number of developers to the project.
         for _ in xrange(random.randint(1, 5)):
             # Remove the users already associated with the project
-            ids = set(user_ids) - set([user.pk for user in excluded_users]) 
+            ids = set(user_ids) - set([user.pk for user in excluded_users])
             u = _get_random_user(list(ids))
             excluded_users.append(u)
             project_api.add_user_to_project(
