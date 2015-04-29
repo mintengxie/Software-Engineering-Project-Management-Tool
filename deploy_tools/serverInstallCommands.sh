@@ -236,9 +236,9 @@ http {
 #restart the server
 sudo service nginx restart
 #**********************3BLUEPRINTS PM SETUP***************************************************
-# export variable to remove searching for dev.3bleuprints site folder
+# export variable to remove searching for www.3bleuprints site folder
 ## make sure you replace 'dev', with 'pre' or 'pro' or 'www' as needed
-export SITENAME=dev.3blueprints.com
+export SITENAME=www.3blueprints.com
 # create directory structure
 mkdir -p ~/sites/$SITENAME/database
 mkdir -p ~/sites/$SITENAME/source
@@ -258,7 +258,7 @@ sudo vim /usr/local/nginx/sites-available/$SITENAME
 #add the following configuration
 server {
     listen 80;
-    server_name dev.3blueprints.com;
+    server_name www.3blueprints.com;
     
     location / {
         proxy_pass http://localhost:8000;
@@ -280,14 +280,14 @@ sudo vim /usr/local/nginx/sites-available/$SITENAME
 #replace with the following lines
 server {
     listen 80;
-    server_name dev.3blueprints.com;
+    server_name www.3blueprints.com;
 
     location / {
         proxy_pass http://localhost:8000;
     }
 
     location /static {
-        alias /home/pgmvt/sites/dev.3blueprints.com/static;
+        alias /home/pgmvt/sites/www.3blueprints.com/static;
      }
 }
 # send all django project static files to main static folder
@@ -301,26 +301,26 @@ sudo vim /usr/local/nginx/sites-available/$SITENAME
 #replace with the following lines
 server {
     listen 80;
-    server_name dev.3blueprints.com;
+    server_name www.3blueprints.com;
 
     location / {
         proxy_set_header Host $host;
-        proxy_pass http://unix:/tmp/dev.3blueprints.com.socket;
+        proxy_pass http://unix:/tmp/www.3blueprints.com.socket;
     }
 
     location /static {
-        alias /home/pgmvt/sites/dev.3blueprints.com/static;
+        alias /home/pgmvt/sites/www.3blueprints.com/static;
      }
 }
 #reload nginx
 sudo service nginx reload
-#restart gunicorn to test (with socket binding); visit http://dev.3blueprints.com
-sudo ../../virtualenv/bin/gunicorn --bind unix:/tmp/dev.3blueprints.com.socket group1.wsgi:application
+#restart gunicorn to test (with socket binding); visit http://www.3blueprints.com
+sudo ../../virtualenv/bin/gunicorn --bind unix:/tmp/www.3blueprints.com.socket group1.wsgi:application
 #**********************GUNICORN UPSTART CONFIG***************************************************
 #finally we automate the gunicorn by using ubuntu's upstart init
-sudo vim /etc/init/gunicorn-dev.3blueprints.com.conf
+sudo vim /etc/init/gunicorn-www.3blueprints.com.conf
 #add the following lines
-description "Gunicorn server for dev.3blueprints.com"
+description "Gunicorn server for www.3blueprints.com"
 
 start on net-device-up
 stop on shutdown
@@ -328,18 +328,21 @@ stop on shutdown
 respawn
 
 setuid root
-chdir /home/pgmvt/sites/dev.3blueprints.com/source/group1
+chdir /home/pgmvt/sites/www.3blueprints.com/source/group1
 
-exec ../../virtualenv/bin/gunicorn --bind unix:/tmp/dev.3blueprints.com.socket group1.wsgi:application
+exec ../../virtualenv/bin/gunicorn --bind unix:/tmp/www.3blueprints.com.socket group1.wsgi:application
 
 #start gunicorn (will comeback up if machine goes down
-sudo stop gunicorn-dev.3blueprints.com
-sudo start gunicorn-dev.3blueprints.com
+sudo stop gunicorn-www.3blueprints.com
+sudo start gunicorn-www.3blueprints.com
 #**********************NODEJS UPSTART CONFIG***************************************************
+#alter the absolute path locations (2 lines) in the main.js file to the server
+##(may not be required if www.3blueprints.com) #TODO: change to relative paths
+vim ~/home/pgmvt/sites/www.3blueprints.com/source/group1/communication/node/main.js
 #finally we automate the nodejs by using ubuntu's upstart init
-sudo vim /etc/init/nodejs-dev.3blueprints.com.conf
+sudo vim /etc/init/nodejs-www.3blueprints.com.conf
 #add the following lines
-description "NodeJS server for dev.3blueprints.com"
+description "NodeJS server for www.3blueprints.com"
 
 start on net-device-up
 stop on shutdown
@@ -348,11 +351,15 @@ respawn
 
 setuid root
 
-exec nodejs /home/pgmvt/sites/dev.3blueprints.com/source/group1/communication/node/main.js
+exec nodejs /home/pgmvt/sites/www.3blueprints.com/source/group1/communication/node/main.js
 
 #start gunicorn (will comeback up if machine goes down
-sudo stop nodejs-dev.3blueprints.com
-sudo start nodejs-dev.3blueprints.com
+sudo stop nodejs-www.3blueprints.com
+sudo start nodejs-www.3blueprints.com
+#check the status of the services
+sudo service --status-all | grep nginx
+initctl list | grep nodejs
+initctl list | grep gunicorn
 #**********************INSTALL MYSQL5.6***************************************************
 #add user for programming enviroment
 sudo adduser mysql
@@ -431,4 +438,4 @@ ALTER DATABASE group1 CHARACTER SET utf8 COLLATE utf8_general_ci;
 #review user privilege statement record
 show grants for mysql;
 #review user privilege at database level
-select DB,user,select_priv,insert_priv,update_priv from mysql.db;
+select DB,user,select_priv,insert_priv,update_priv from mysql.db
