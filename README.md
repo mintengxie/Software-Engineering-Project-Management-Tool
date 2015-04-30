@@ -1,14 +1,19 @@
 # Final_Project
 
-###### note: locally, you must install nodejs and run main.js in /communication/node/main.js for the communication application to work
+###### note: locally, you must install nodejs and run main.js in /communication/node/main.js for the communication application to work; also adjust the 2 absolute paths in the main.js file to match the directory structure
 
 ### LOCAL INSTALLATION (windows systems)
 ###### to use linux style commands of this README please install git bash (http://www.geekgumbo.com/2010/04/09/installing-git-on-windows/)
 ##### create a directory in your drive C:
-mkdir /c/g1 \n
-mkdir /c/g1/database \n
-mkdir /c/g1/source \n
-mdkir /c/g1/virtualenv \n
+##### 
+mkdir /c/g1
+##### 
+mkdir /c/g1/database
+##### 
+mkdir /c/g1/source
+##### 
+mdkir /c/g1/virtualenv
+##### 
 mkdir /c/g1/static \n
 
 ##### clone project into source folder
@@ -72,7 +77,7 @@ cd ~/g1/source/group1
 ### SERVER INSTALLATION (*nix systems)
 ###### note: follow the commands under deploy_tools serverInstallcommands.sh (not tested as an executable shell script)
 ###### note: must have fabric installed (on windows this will require a manual installation (setup_py) of pycrypto first, you may find pre-compiled windows binaries here (http://www.voidspace.org.uk/python/modules.shtml#pycrypto)
-##### change directory to where deploy_tools is on your local computer
+##### change directory to where deploy_tools is on your local computer - this script is deployed from your local computer to the server
 cd /c/g1/source/deploy_tools
 ###### note: must activate virtualenv with fabric (you may have fabric installed on your path python, and not require a virtualenv)
 ##### run the fabfile.py script with the following command to upload the project from origin/master to the specified server

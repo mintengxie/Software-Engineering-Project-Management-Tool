@@ -336,7 +336,7 @@ exec ../../virtualenv/bin/gunicorn --bind unix:/tmp/www.3blueprints.com.socket g
 sudo stop gunicorn-www.3blueprints.com
 sudo start gunicorn-www.3blueprints.com
 #**********************NODEJS UPSTART CONFIG***************************************************
-#alter the absolute path locations (2 lines) in the main.js file to the server
+#alter absolute paths (2 lines) in the main.js file to the correct server path relative to the project directory
 ##(may not be required if www.3blueprints.com) #TODO: change to relative paths
 vim ~/home/pgmvt/sites/www.3blueprints.com/source/group1/communication/node/main.js
 #finally we automate the nodejs by using ubuntu's upstart init
@@ -370,7 +370,7 @@ sudo usermod -a -G sudo mysql
 #check groups of user
 groups mysql
 ##
-## EXIT AND LOGIN AS pgmvt
+## EXIT AND LOGIN AS mysql
 ##
 #login as mysql to install MYSQL5
 #make directory for mysql in /usr/local
