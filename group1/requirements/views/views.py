@@ -12,4 +12,3 @@ from forms import NewProjectForm, AddUserForm
 
 from forms import registrationForm
 from django import forms
-

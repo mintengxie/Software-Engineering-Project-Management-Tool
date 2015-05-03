@@ -37,14 +37,14 @@ def signin(request):
     username = password = ''
     errormsg = ""
     next = ""
-    
+
     if request.GET:
         next = request.GET['next']
     if request.POST:
         username = request.POST['username']
         password = request.POST['password']
         next = request.POST['next']
-        
+
         user = authenticate(username=username, password=password)
         if user is not None:
             if user.is_active:
@@ -55,31 +55,38 @@ def signin(request):
                     return HttpResponseRedirect(next)
         else:
             errormsg = 'Username or Password is incorrect ! Please try again !'
-    return render_to_response('SignIn.html', 
-                              {'errorMsg': errormsg, 'next': next, 'isUserSigningInUpOrOut': 'true'}, 
+    return render_to_response('SignIn.html',
+                              {'errorMsg': errormsg,
+                               'next': next,
+                               'isUserSigningInUpOrOut': 'true'},
                               context_instance=RequestContext(request))
 
+
 def signup(request):
-    if request.method =='POST':
-        form =  SignUpForm(request.POST)
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
         if form.is_valid():
             form.save(commit=True)
-            return render(request,'SignUpFinish.html',{'form': form, 'isUserSigningInUpOrOut': 'true'})
+            return render(
+                request, 'SignUpFinish.html', {'form': form, 'isUserSigningInUpOrOut': 'true'})
     else:
-        form =  SignUpForm()
-    return render(request, 'SignUp.html', {'form': form, 'isUserSigningInUpOrOut': 'true'})
-    
-@login_required    
+        form = SignUpForm()
+    return render(
+        request, 'SignUp.html', {'form': form, 'isUserSigningInUpOrOut': 'true'})
+
+
+@login_required
 def signout(request):
     logout(request)
     context = {'isUserSigningInUpOrOut': 'true'}
     return render(request, 'SignOut.html', context)
 
+
 @login_required(login_url='/signin')
 def changepasswd(request):
     user = request.user
     if request.method == 'POST':
-        form = ChangePwdForm(request.POST,user=user)
+        form = ChangePwdForm(request.POST, user=user)
         if form.is_valid():
             form.save(commit=True)
             logout(request)
@@ -96,11 +103,12 @@ def changepasswd(request):
     }
     return render(request, 'ChangePasswd.html', context)
 
+
 @login_required(login_url='/signin')
 def userprofile(request):
     user = request.user
     if request.method == 'POST':
-        form = UserProfileForm(request.POST,instance=user)
+        form = UserProfileForm(request.POST, instance=user)
         if form.is_valid():
             form.save(commit=True)
             return HttpResponse('')
@@ -114,4 +122,3 @@ def userprofile(request):
         'button_desc': 'Change Profile'
     }
     return render(request, 'UserProfile.html', context)
-

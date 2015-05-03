@@ -17,43 +17,47 @@ import datetime
 
 PERMISSION_OWN_PROJECT = 'requirements.own_project'
 
+
 @login_required(login_url='/signin')
 def iteration(request, projectID, iterationID):
     if project_api.can_user_access_project(request.user.id, projectID):
         projects = project_api.get_projects_for_user(request.user.id)
         project = project_api.get_project(projectID)
-        if project == None:
+        if project is None:
             return redirect('/req/projects')
-        association = UserAssociation.objects.get(user=request.user, project=project)
+        association = UserAssociation.objects.get(
+            user=request.user,
+            project=project)
         iterations = project_api.get_iterations_for_project(project)
         iteration = project_api.get_iteration(iterationID)
-        if iteration != None:
+        if iteration is not None:
             stories = project_api.get_stories_for_iteration(iteration)
         else:
             stories = project_api.get_stories_with_no_iteration(project)
-        context = {'projects' : projects,
-                   'project' : project,
-                   'association' : association,
-                   'iterations' : iterations,
-                   'iteration' : iteration,
-                   'stories' : stories,
-                   'owns_project' : project_api.user_owns_project(request.user,project)
+        context = {'projects': projects,
+                   'project': project,
+                   'association': association,
+                   'iterations': iterations,
+                   'iteration': iteration,
+                   'stories': stories,
+                   'owns_project': project_api.user_owns_project(request.user, project)
                    }
-        if iteration == None:
+        if iteration is None:
             context['isIceBox'] = True
         return render(request, 'IterationDetail.html', context)
     else:
         # return HttpResponse("You cannot access project " + proj)
         return redirect('/req/projects')
 
+
 @login_required(login_url='/signin')
-@user_owns_project()  
+@user_owns_project()
 def new_iteration(request, projectID):
     project = project_api.get_project(projectID)
     if request.method == 'POST':
         form = IterationForm(request.POST)
         if form.is_valid():
-            mdl_iteration.create_iteration(project,request.POST)
+            mdl_iteration.create_iteration(project, request.POST)
             form.save(commit=False)
             # return redirect('/req/projectdetail/' + projectID)
             # return empty string and do the redirect stuff in front-end
@@ -68,12 +72,13 @@ def new_iteration(request, projectID):
     }
     return render(request, 'IterationSummary.html', context)
 
+
 @login_required(login_url='/signin')
-@user_owns_project()  
-def edit_iteration(request,projectID,iterationID):
+@user_owns_project()
+def edit_iteration(request, projectID, iterationID):
     project = project_api.get_project(projectID)
     iteration = mdl_iteration.get_iteration(iterationID)
-    if project == None or iteration == None or iteration.project != project:
+    if project is None or iteration is None or iteration.project != project:
         # return redirect('/req/projectdetail/' + projectID)
         # return empty string and do the redirect stuff in front-end
         return HttpResponse('')
@@ -94,12 +99,13 @@ def edit_iteration(request,projectID,iterationID):
     }
     return render(request, 'IterationSummary.html', context)
 
+
 @login_required(login_url='/signin')
-@user_owns_project()  
-def delete_iteration(request,projectID,iterationID):
+@user_owns_project()
+def delete_iteration(request, projectID, iterationID):
     project = project_api.get_project(projectID)
     iteration = mdl_iteration.get_iteration(iterationID)
-    if project == None or iteration == None or iteration.project != project:
+    if project is None or iteration is None or iteration.project != project:
         # return redirect('/req/projectdetail/' + projectID)
         # return empty string and do the redirect stuff in front-end
         return HttpResponse('')
@@ -119,29 +125,31 @@ def delete_iteration(request,projectID,iterationID):
     }
     return render(request, 'IterationSummary.html', context)
 
+
 @login_required(login_url='/signin')
 def list_iterations_for_project(request, projectID):
     project = project_api.get_project(projectID)
     iterations = mdl_iteration.get_iterations_for_project(project)
     context = {
-        'project' : project,
-        'iterations' : iterations,
-        'owns_project' : project_api.user_owns_project(request.user,project),
+        'project': project,
+        'iterations': iterations,
+        'owns_project': project_api.user_owns_project(request.user, project),
     }
     return render(request, 'SideBarIters.html', context)
 
+
 @login_required(login_url='/signin')
-def list_iterations_for_project_with_selection(request, projectID, iterationID):
+def list_iterations_for_project_with_selection(
+        request, projectID, iterationID):
     project = project_api.get_project(projectID)
     iterations = mdl_iteration.get_iterations_for_project(project)
     iteration = mdl_iteration.get_iteration(iterationID)
     context = {
-        'project' : project,
-        'iterations' : iterations,
-        'iteration' : iteration,
-        'owns_project' : project_api.user_owns_project(request.user,project),
+        'project': project,
+        'iterations': iterations,
+        'iteration': iteration,
+        'owns_project': project_api.user_owns_project(request.user, project),
     }
-    if iteration == None:
+    if iteration is None:
         context['isIceBox'] = True
     return render(request, 'SideBarIters.html', context)
-

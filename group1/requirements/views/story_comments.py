@@ -11,24 +11,23 @@ from django.template import RequestContext
 from django.shortcuts import render, redirect
 
 
-
 def new_comment(request, storyID, projectID):
     if request.method == 'POST':
         form = AddCommentForm(request.POST)
         if form.is_valid():
             project = project_api.get_project(projectID)
             story = story.get_story(storyID)
-            story_comment = models.story_comment.create_story_comment(request.user, story, request.POST)
+            story_comment = models.story_comment.create_story_comment(
+                request.user,
+                story,
+                request.POST)
             story_comment = form.save(commit=False)
             return redirect('/project/' + projectID)
     else:
         form = AddCommentForm()
-        
-    context = {'title' : 'New Story Comment',
-               'form' : form, 
-               'action' : '/newcomment/' + storyID , 
-               'desc' : 'Create Story Comment' }
-    return render(request, 'CommentForm.html', context )
 
-
-
+    context = {'title': 'New Story Comment',
+               'form': form,
+               'action': '/newcomment/' + storyID,
+               'desc': 'Create Story Comment'}
+    return render(request, 'CommentForm.html', context)
