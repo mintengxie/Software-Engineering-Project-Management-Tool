@@ -35,8 +35,12 @@
 								            <!-- <div id="panelbar-{{ theProject.id }}" class="pull-right"> -->
                                             {% for anAssociation in associationsWithUser %}
                                                 {% check_permission anAssociation aProject "DeleteProject" as can_delete %} 
-                                                {% if can_delete  %} 
-        							        		<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showDialog('/req/deleteproject/{{ aProject.id }}');">
+                                                {% if can_delete  %}
+                                                    <!--data-del-proj used for ui test automation --> 
+        							        		<a class="btn btn-link pull-right" 
+        							        		   href="javascript:void(0);" 
+        							        		   data-del-proj="{{ aProject.title }}" 
+        							        		   onclick="showDialog('/req/deleteproject/{{ aProject.id }}');">
                                                     <i class="fa fa-trash-o fa-fw"></i>
                                                      Delete
                                                     </a>
@@ -49,7 +53,9 @@
                                                     </a>
                                                 {% endif %}
                                             {% endfor %}
-							           		<a class="btn btn-link pull-right" href="/req/projectdetail/{{ aProject.id }}">
+							           		<a  class="btn btn-link pull-right" 
+							           		    href="/req/projectdetail/{{ aProject.id }}"
+							           		    data-open-proj="{{ aProject.title }}">
 							           			<i class="glyphicon glyphicon-folder-open fa-fw"></i>
 							           			 Open
 							           		</a>

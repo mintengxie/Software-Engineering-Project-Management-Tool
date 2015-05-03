@@ -32,8 +32,10 @@ pre {
             </div>
         </div>
 
-        <div style="padding: 10px; border: solid black; width: 70%; height: 300px; float: left; font-size: 18px; ">
-            <div id="resolution" style="width: 50%">
+        <div class="container" style="width: 100%">
+        <!-- <div class="col-md-6" style="padding: 10px; border: solid black; width: 70%; height: 300px; float: left; font-size: 18px; "> -->
+        <div class="col-md-7 col-sm-12  col-xs-12">    
+            <div class="col-md-6">
 
                 <p style="font-size: 18px; padding: 0px ; margin: 0px"><b>Title: {{ issue.title }}</b></p>
 
@@ -49,11 +51,13 @@ pre {
 
                 <p style="font-size: 18px; padding: 0px ; margin: 0px"><b>Priority: {{ issue.priority }}</b></p>
 
+                <br>
+
             </div>
 
-            <div id="resolution" style="float: left; width: 50%">
+            <div class="col-md-6" style="float: left;">
 
-                <p style="font-size: 18px; padding: 0px ; margin: 0px;"><b>Project: {{ issue.project }}</b></p>
+                <p style="font-size: 18px; padding: 0px ; margin: 0px;"><b>Project: <a href="/req/projectdetail/{{ issue.project.id }}" style="color: #B22222;">{{ issue.project }}</a></b></p>
 
                 <br>
 
@@ -79,16 +83,11 @@ pre {
             </div>
         </div>
 
-        <div id="history" style="width: 30%; height: 300px;">
+        <div class="col-md-5" id="history" style="height: 300px;">
             <br><br>
             <Strong>History:</Strong><br><br>
             <ul>
                 <li>Created By: <a href="mailto:{{ issue.reporter.email }}" style="color: #B22222;">{{ issue.reporter.first_name }} {{ issue.reporter.last_name }} ({{ issue.reporter }})</a></li><br><br>
-                {% if issue.assignee %}
-                  <li>Assigned To: <a href="mailto:{{ issue.assignee.email }}" style="color: #B22222;">{{ issue.assignee.first_name }} {{ issue.assignee.last_name }} ({{ issue.assignee }})</a></li><br><br>
-                {% else %}
-                  <li>Assigned To: {{ issue.assignee }})</li><br><br>
-                {% endif %}
                 <li>Date Created: {{ issue.submitted_date}} </li><br><br>
                 <li>Last Updated: {{ issue.modified_date }} </li><br><br>
             </ul>
@@ -96,6 +95,7 @@ pre {
             These will be added to the database with each change to the issue
 -->
             <br><br>
+        </div>
         </div>
 
         <div id="description" style="width: 100%; font-size: 18px;">
@@ -121,12 +121,12 @@ pre {
                     <p class="text-warning" style="color: #A70303;"><b>Status Updates/Comments: </b></p>
                     {% for comment in comment_list %}
                         
-                            <a href="#{{ forloop.counter0 }}" style="color: #B22222;">#{{ forloop.counter0 }}</a>, 
+                            <a href="#{{ forloop.revcounter }}" style="color: #B22222;">#{{ forloop.revcounter }}</a>, 
                             <a href="mailto:{{ comment.poster.email }}" style="color: #B22222;">{{ comment.poster.first_name }} {{ comment.poster.last_name }} ({{ comment.poster }})</a>, <i>{{comment.date}}</i><br/>
                         {% if comment.is_comment%}
                             <pre style=>{{ comment.comment }}</pre>
                         {% else %}
-                        <textarea cols="80" readonly =true> {{ comment.comment }}</textarea>
+                        <textarea style="width: 100%;" cols="80" readonly =true> {{ comment.comment }}</textarea>
                            <br/>
                         {% endif %}
                     {% endfor%}
