@@ -14,7 +14,7 @@ mkdir /c/g1/source
 ##### 
 mdkir /c/g1/virtualenv
 ##### 
-mkdir /c/g1/static \n
+mkdir /c/g1/static
 
 ##### clone project into source folder
 git clone https://github.com/CS673S15-Group1/Final_Project /c/g1/source
