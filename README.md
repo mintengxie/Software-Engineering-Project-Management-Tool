@@ -43,12 +43,16 @@ cd /c/g1/source/group1
 
 ### LOCAL INSTALLATION (*nix systems [Mac, Ubuntu...])
 ##### create a directory in your home directory
-mkdir ~/g1 \n
-mkdir ~/g1/database \n
-mkdir ~/g1/source \n
-mdkir ~/g1/virtualenv \n
-mkdir ~/g1/static \n
-
+##### 
+mkdir ~/g1
+##### 
+mkdir ~/g1/database
+##### 
+mkdir ~/g1/source
+##### 
+mdkir ~/g1/virtualenv
+##### 
+mkdir ~/g1/static
 ##### clone project into source folder
 git clone https://github.com/CS673S15-Group1/Final_Project ~/g1/source
 
