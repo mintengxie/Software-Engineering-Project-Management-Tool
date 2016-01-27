@@ -54,11 +54,7 @@ sudo easy_install-2.7 pip
 sudo -H pip2.7 install --upgrade pip
 #***************************SETUP VIRTUALENV*******************************************
 #install virtualenv
-sudo -H pip2.7 install virtualenv
-#if not already existing must add to /usr/local/bin
-sudo vim /usr/local/bin/virtualenv
-#add the following lines
-python2.7 /usr/local/lib/python2.7/site-packages/virtualenv.py
+sudo apt-get install python-virtualenv
 #*******************************SETUP GIT**********************************************
 #install dependencies
 sudo apt-get install libbz2-dev libcurl4-gnutls-dev libexpat1-dev gettext libz-dev libssl-dev build-essential libsqlite3-dev bzip2 libbz2-dev libncurses5-dev cmake bison libreadline-dev libxml2-dev libeditline-dev libaio-dev
