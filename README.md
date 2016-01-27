@@ -50,7 +50,7 @@ mkdir ~/g1/database
 ##### 
 mkdir ~/g1/source
 ##### 
-mdkir ~/g1/virtualenv
+mkdir ~/g1/virtualenv
 ##### 
 mkdir ~/g1/static
 ##### clone project into source folder
