@@ -82,6 +82,10 @@ source ~/.bashrc
 #install nodejs
 sudo apt-get install nodejs
 #**********************INSTALL NGINX***************************************************
+#remove previously installed nginx
+sudo apt-get remove nginx
+sudo apt-get remove nginx-core
+sudo apt-get remove nginx-common
 #install dependencies
 sudo apt-get install libc6 libpcre3 libssl0.9.8 zlib1g lsb-base libpcre3 libpcre3-dev
 #change directory to downloads
