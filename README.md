@@ -60,7 +60,7 @@ git clone https://github.com/CS673S15-Group1/Final_Project ~/g1/source
 ###### note: must have installed python 2.7 to the default directory in /usr/local/bin with a python2.7 executable via altinstall
 ###### note: must have virtual env installed 'pip install virtualenv' -- must have pip installed, usually included on windows system installs
 ###### note: see server installation script under deploy_tools for details on installing a new python
-virtualenv - p /usr/local/bin/python2.7 ~/g1/virtualenv
+virtualenv -p /usr/local/bin/python2.7 ~/g1/virtualenv
 
 ##### change directory to the project source
 cd ~/g1/source/group1
