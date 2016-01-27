@@ -42,6 +42,8 @@ cd Python-2.7.9/
 sudo ./configure --prefix=/usr/local --enable-shared LDFLAGS="-Wl,-rpath /usr/local/lib"
 #install python (must be installed as root --altinstall to configure another python2.7.9 and pip2.7 vs python2.7 would be the executable shortcut (unix link) in path)
 sudo make && sudo make altinstall
+#change directory to downloads
+cd ~/downloads
 ###download setuptools -- required for python27, in python34 is already included
 curl -LOk https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py
 ###install setup tools
