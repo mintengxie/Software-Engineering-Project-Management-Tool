@@ -20,6 +20,10 @@ from requirements.models.user_manager import user_owns_project
 from requirements.models.user_manager import user_can_access_project
 from requirements.models.files import ProjectFile
 from django.utils.encoding import smart_str
+
+#----------REXYANG----------
+from requirements.models import filemaker
+
 PERMISSION_OWN_PROJECT = 'requirements.own_project'
 
 
@@ -293,4 +297,13 @@ def download_file(request, projectID):
             ''))
     response = HttpResponse(file.file)
     response['Content-Disposition'] = 'attachment; filename=' + file.name
+    return response
+
+@user_can_access_project()
+def makefile(request,projectID):
+    response = HttpResponse()
+    response['Content-Disposition'] = 'attachment; filename=my.txt'
+    statement = filemaker.make_Statement(projectID)
+    print(statement)
+    response.write(statement)
     return response
