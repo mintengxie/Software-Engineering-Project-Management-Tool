@@ -14,7 +14,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.models import User
 from django.template import RequestContext
-from django.shortcuts import render, redirect
+from django.shortcuts import render, render_to_response, redirect
 import datetime
 from requirements.models.user_manager import user_owns_project
 from requirements.models.user_manager import user_can_access_project
@@ -34,6 +34,16 @@ def list_projects(request):
         'theUser': request.user,
         'associationsWithUser': project_api.get_associations_for_user(request.user.id)
     }
+
+
+    print "1234117"
+    print type(str(project_api.get_projects_for_user(request.user.id)))
+    list=(str(project_api.get_projects_for_user(request.user.id))).replace("<Project: ","").replace(', ','').replace('[','').replace("]",'').split('>')
+    print list
+    print "aaa" in list ,"aaa"
+    print "aa" in list,'aa'
+    print "aaaa" in list,'aaaa'
+    print "1234567"
     # if request.user.is_authenticated():
     #     logedInUser = request.user
     #     logedInUser.set_unusable_password()
@@ -67,12 +77,21 @@ def project(request, projectID):
 def new_project(request):
     if request.method == 'POST':
         form = ProjectForm(request.POST)
-        if form.is_valid():
+        name = str(request.POST['title'])
+        #list=(str(project_api.get_projects_for_user(request.user.id))).replace("<Project: ","").replace(', ','').replace('[','').replace("]",'').split('>')
+        #list = project_api.get_projects_for_user(request.user.id).values_list('title',flat=True)
+        #print list
+
+        #if name in list:
+        if project_api.duplicate_project(request.user,request.POST):
+            form.if_dup(1)
+        if form.is_valid() :
             project_api.create_project(request.user, request.POST)
             project = form.save(commit=False)
             # return redirect('/req/projects')
             # return empty string and do the redirect stuff in front-end
             return HttpResponse('')
+
     else:
         form = ProjectForm()
 
