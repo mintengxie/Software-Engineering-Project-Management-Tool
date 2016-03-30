@@ -134,6 +134,19 @@ class ProjectTestCase(TestCase):
         p = models.project_api.create_project(user, fields)
         self.assertEqual(0, Project.objects.count())
 
+    def test_create_duplicate_project_fail(self):
+        fields = {"title": "title",
+                  "description": "desc"}
+        p = False
+        p1 = False
+        if not models.project_api.duplicate_project(self.__user,fields):
+            p = models.project_api.create_project(self.__user, fields)
+        if not models.project_api.duplicate_project(self.__user, fields):
+            p1 = models.project_api.create_project(self.__user, fields)
+        self.assertEqual(1, Project.objects.filter(id=p.id).count())
+        self.assertEqual(False, p1)
+
+
     def test_add_user_to_project_pass(self):
         p = Project(title="title", description="desc")
         p.save()
