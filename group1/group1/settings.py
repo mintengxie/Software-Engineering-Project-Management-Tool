@@ -27,6 +27,17 @@ TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# Email setting, adding by Zhi and Nora
+EMAIL_HOST = 'smtp.live.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'zhidou@hotmail.com'
+EMAIL_HOST_PASSWORD = 'DOUZhi19910617'
+EMAIL_USE_TLS = True
+#EMAIL_USE_SSL = True
+
+
+
+
 
 # Application definition
 
