@@ -46,6 +46,8 @@ class TestIterations(unittest.TestCase):
         driver.find_element_by_id("id_title").clear()
         driver.find_element_by_id("id_title").send_keys(
             "Stroy 1 ")
+        driver.find_element_by_id("id_hours").send_keys(
+            "2")
         driver.find_element_by_link_text("Create User Story").click()
         time.sleep(2)
         driver.find_element_by_id("dropdownMenu1").click()
