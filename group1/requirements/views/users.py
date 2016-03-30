@@ -54,7 +54,14 @@ def signin(request):
                 else:
                     return HttpResponseRedirect(next)
         else:
-            errormsg = 'Username or Password is incorrect ! Please try again !'
+            x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+            if x_forwarded_for:
+                ip1 = x_forwarded_for.split(',')[-1].strip()
+            else:
+                ip1 = request.META.get("REMOTE_ADDR")
+            errormsg0 = 'Username or Password is incorrect ! Please try again !'
+            errormsg1 = ' If you fail more than 3 times, your IP address : '+str(ip1)+ " need to wait 60s for next try!"
+            errormsg = errormsg0 + errormsg1
     return render_to_response('SignIn.html',
                               {'errorMsg': errormsg,
                                'next': next,
