@@ -45,6 +45,8 @@
 	    	                        	<li role="presentation">
 	    	                        		<a role="menuitem" tabindex="-1" href="/req/movestorytoiter/{{project.id}}/{{story.id}}/{{iter_local.id}}">{{iter_local.title}}</a>
 	    	                        	</li>
+                                                {% empty %}
+                                                                                     <li role="presentation"><a>No Iteration</a></li>
 	    	                        	{% endfor %}
 	    	                      	</ul>
 	    	                    </div>
@@ -199,6 +201,7 @@
 	    	                        		<a role="menuitem" tabindex="-1" href="/req/movestorytoiter/{{project.id}}/{{story.id}}/{{iter_local.id}}">{{iter_local.title}}</a>
 	    	                        	</li>
 										{% endif %}
+                                                                                   
 	    	                        	{% endfor %}
 	    	                        	<li role="presentation"><a role="menuitem" tabindex="-1" href="/req/movestorytoicebox/{{project.id}}/{{story.id}}">Icebox</a></li>
 	    	                      	</ul>

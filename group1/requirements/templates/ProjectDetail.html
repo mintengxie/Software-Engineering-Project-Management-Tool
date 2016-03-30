@@ -48,6 +48,7 @@
 
 								                    {% check_permission association project "MoveStoryToIteration" as can_move_story %}
 								                    {% if can_move_story %}
+                                                                                    
             	    	    	                    <div class="btn-group pull-right">
             	    	    	                    <!--data-move-story attribute used for ui test automation -->
     	    	                    	                <button class="btn btn-default dropdown-toggle pull-right" 
@@ -59,13 +60,21 @@
             	    	    	                      	</button>
             	    	    	                      	<ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dropdownMenu1">
             	    	    	                       		{% for iter_local in iterations %}
+                                                                
             	    	    	                        	<li role="presentation">
             	    	    	                        		<a role="menuitem" tabindex="-1" href="/req/movestorytoiter/{{project.id}}/{{story.id}}/{{iter_local.id}}">{{iter_local.title}}</a>
             	    	    	                        	</li>
-            	    	    	                        	{% endfor %}
+            	    	    	                        	{% empty %}
+                                                                                     <li role="presentation"><a>No Iteration</a></li>
+                                                                {% endfor %}
+                                                                
+                                                                
+                                                                
             	    	    	                      	</ul>
             	    	    	                    </div>
+                                                                                    
             	    	    	                    {% endif %}
+                                                    
 
                                                     {% check_permission association project "DeleteStory" as can_delete %} 
                                                     {% if can_delete %}
