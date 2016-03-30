@@ -87,7 +87,7 @@ urlpatterns = patterns('',
                        url(r'^downprojectattach/(?P<projectID>\d+)/?',
                            projects.download_file),
                        #----------REXYANG----------
-                       url(r'^makefile/(?P<projectID>\d+)/?',
+                       url(r'^makefile/(?P<projectID>\d+)',
                            projects.makefile),
 
                        )
