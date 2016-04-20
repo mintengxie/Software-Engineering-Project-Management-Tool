@@ -38,16 +38,7 @@ def list_projects(request):
         'theUser': request.user,
         'associationsWithUser': project_api.get_associations_for_user(request.user.id)
     }
-
-
-    print "1234117"
-    print type(str(project_api.get_projects_for_user(request.user.id)))
     list=(str(project_api.get_projects_for_user(request.user.id))).replace("<Project: ","").replace(', ','').replace('[','').replace("]",'').split('>')
-    print list
-    print "aaa" in list ,"aaa"
-    print "aa" in list,'aa'
-    print "aaaa" in list,'aaaa'
-    print "1234567"
     # if request.user.is_authenticated():
     #     logedInUser = request.user
     #     logedInUser.set_unusable_password()

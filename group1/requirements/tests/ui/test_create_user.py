@@ -121,28 +121,6 @@ class TestCreate(unittest.TestCase):
         user = self.user[1]
         driver.find_element_by_link_text("Sign In").click()
 
-        # login without user name
-        driver.find_element_by_id("username").clear()
-        driver.find_element_by_id("password").clear()
-        driver.find_element_by_id("password").send_keys(user.password)
-        driver.find_element_by_xpath("//button[@type='submit']").click()
-        time.sleep(2)
-
-        # login without password
-        driver.find_element_by_id("password").clear()
-        driver.find_element_by_id("username").clear()
-        driver.find_element_by_id("username").send_keys(user.username)
-        driver.find_element_by_xpath("//button[@type='submit']").click()
-        time.sleep(2)
-
-        # login with wrong password
-        driver.find_element_by_id("username").clear()
-        driver.find_element_by_id("username").send_keys(user.username)
-        driver.find_element_by_id("password").clear()
-        driver.find_element_by_id("password").send_keys('pooiu')
-        driver.find_element_by_xpath("//button[@type='submit']").click()
-        time.sleep(2)
-
         # login with password and name but, not active
         driver.find_element_by_id("username").clear()
         driver.find_element_by_id("username").send_keys(user.username)
