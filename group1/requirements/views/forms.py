@@ -14,8 +14,13 @@ import datetime
 
 
 class SignUpForm(UserCreationForm):
+    ROLES = (  
+   	 	('cli', 'Client'),
+    		('own', 'Owner'),
+    		('dev', 'Developer')
+		)
     email = forms.EmailField(required=True)
-
+    role = forms.ChoiceField(choices=ROLES, required=True )
     def __init__(self, *args, **kwargs):
         super(SignUpForm, self).__init__(*args, **kwargs)
         for name, field in self.fields.items():
@@ -30,6 +35,7 @@ class SignUpForm(UserCreationForm):
             'first_name',
             'last_name',
             'email',
+            'role',
             'username',
             'password1',
             'password2')
@@ -108,9 +114,6 @@ class IterationForm(forms.ModelForm):
 
 
 class ProjectForm(forms.ModelForm):
-
-    dup = 0
-
     def __init__(self, *args, **kwargs):
         super(ProjectForm, self).__init__(*args, **kwargs)
         for name, field in self.fields.items():
@@ -118,15 +121,6 @@ class ProjectForm(forms.ModelForm):
                 field.widget.attrs['class'] += ' form-control'
             else:
                 field.widget.attrs.update({'class': 'form-control'})
-
-    def clean_title(self):
-        title = self.cleaned_data['title']
-        if self.dup == 1:
-            raise forms.ValidationError('Duplicate project title')
-        return title
-
-    def if_dup(self,dup):
-        self.dup = dup
 
     class Meta:
         model = Project
