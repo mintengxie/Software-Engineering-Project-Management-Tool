@@ -1,4 +1,6 @@
 from django import forms
+from django.utils import timezone
+import datetime
 import requirements.models.user_manager
 from requirements.models import user_manager
 from django.http import HttpResponse, HttpResponseRedirect
@@ -7,7 +9,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.template import RequestContext
 from django.shortcuts import render, render_to_response, redirect
-from django.core.mail import send_mail
+from requirements.models.ip import IPaddress
+
 
 # def create_user(request):
 # 	if userManager.createUser(request) :
@@ -46,23 +49,61 @@ def signin(request):
         password = request.POST['password']
         next = request.POST['next']
 
-        user = authenticate(username=username, password=password)
-        if user is not None:
-            if user.is_active:
-                login(request, user)
-                if next == '':
-                    return HttpResponseRedirect('/req/projects')
-                else:
-                    return HttpResponseRedirect(next)
+        #get IP address
+        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        if x_forwarded_for:
+            ip1 = x_forwarded_for.split(',')[-1].strip()
         else:
-            x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-            if x_forwarded_for:
-                ip1 = x_forwarded_for.split(',')[-1].strip()
+            ip1 = request.META.get("REMOTE_ADDR")
+
+        #get latest time
+        now = timezone.now()
+        t = now - datetime.timedelta(seconds=60)
+        wrong_times = IPaddress.objects.filter(ip = ip1).count()
+        latest_time = IPaddress.objects.filter(last_time__gte = t )
+        #print 'wrong times: '+ str(wrong_times)
+        #print 'latest time: '+str(latest_time)
+
+        # if input wrong pwd more than 3 times, the ip will be blocked for 60s
+        if wrong_times >= 3 and latest_time:
+            print latest_time
+            errormsg = 'you have tried many times, please signin after 60s later.'
+        else:
+            # if input wrong but, this time is 60s after last time, first clear the record of this IP
+            if not latest_time:
+                IPaddress.objects.filter(ip = ip1).all().delete()
+                wrong_times = 0
+                print IPaddress.objects.all()
+            user = authenticate(username=username, password=password)
+            # check whether user name and pwd is correct
+            if user is not None:
+                if user.is_active:
+                    login(request, user)
+                    IPaddress.objects.all().filter(ip = ip1).delete()
+                    print IPaddress.objects.all()
+                    if next == '':
+                        return HttpResponseRedirect('/req/projects')
+                    else:
+                        return HttpResponseRedirect(next)
             else:
-                ip1 = request.META.get("REMOTE_ADDR")
-            errormsg0 = 'Username or Password is incorrect ! Please try again !'
-            errormsg1 = ' If you fail more than 3 times, your IP address : '+str(ip1)+ " need to wait 60s for next try!"
-            errormsg = errormsg0 + errormsg1
+                x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+                if x_forwarded_for:
+                    ip1 = x_forwarded_for.split(',')[-1].strip()
+                else:
+                    ip1 = request.META.get("REMOTE_ADDR")
+
+                #IP address : '+str(ip1)+ "
+                if wrong_times == 2:
+                    errormsg0 = ''
+                    errormsg1 = 'you have tried many times, please signin after 60s later.'
+                else:
+                    errormsg0 = 'Username or Password is incorrect ! Please try again !'
+                    errormsg1 = ' If you fail more than ' +str(2-wrong_times)+ ' times, you need to wait 60s for next try!'
+                errormsg = errormsg0 + errormsg1
+                ipform = IPaddress(ip = ip1,last_time = now)
+                ipform.save(force_insert=True)
+                #print IPaddress.objects.all()
+
     return render_to_response('SignIn.html',
                               {'errorMsg': errormsg,
                                'next': next,
@@ -75,7 +116,6 @@ def signup(request):
         form = SignUpForm(request.POST)
         if form.is_valid():
             form.save(commit=True)
-            cd = form.cleaned_data
             return render(
                 request, 'SignUpFinish.html', {'form': form, 'isUserSigningInUpOrOut': 'true'})
     else:
@@ -90,7 +130,7 @@ def signout(request):
     context = {'isUserSigningInUpOrOut': 'true'}
     return render(request, 'SignOut.html', context)
 
-# this changed by zhi and Nora
+
 @login_required(login_url='/signin')
 def changepasswd(request):
     user = request.user
@@ -98,9 +138,6 @@ def changepasswd(request):
         form = ChangePwdForm(request.POST, user=user)
         if form.is_valid():
             form.save(commit=True)
-            send_mail('Your password has been changed',
-                      'Your password has been chenged by user: '+request.user.username,
-                      'zhidou@hotmail.com', [user.email])
             logout(request)
             return HttpResponse('')
     else:

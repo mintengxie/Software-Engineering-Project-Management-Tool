@@ -18,7 +18,7 @@ class AdminTest(unittest.TestCase):
 
 
 
-    def test_wrong_password(self):
+    def test_duplicate_project_name(self):
 
         driver = self.driver
         driver.get(self.base_url + "/")
