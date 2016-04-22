@@ -62,7 +62,7 @@ class TestCreate(unittest.TestCase):
         self.nameConfirm()
         self.emailConfirm()
         self.withoutEmail()
-        self.failLogin()
+        
         self.activate()
         self.deleteTestUser()
         return True
@@ -104,7 +104,7 @@ class TestCreate(unittest.TestCase):
         driver = self.driver
         user = self.user[3]
         self.createUser(3)
-
+        
         time.sleep(2)
         driver.get(self.base_url + "/")
 
