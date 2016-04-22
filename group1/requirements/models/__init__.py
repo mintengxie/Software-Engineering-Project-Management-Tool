@@ -7,3 +7,4 @@ from requirements.models.iteration import Iteration
 import requirements.models.iteration
 from requirements.models.files import ProjectFile
 from requirements.models.story_comment import StoryComment
+from requirements.models.ip import IPaddress
