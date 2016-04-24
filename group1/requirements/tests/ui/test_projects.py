@@ -89,7 +89,7 @@ class TestProjects(unittest.TestCase):
         driver.find_element_by_xpath(
             "//div[@id='page-wrapper']/div[2]/div[2]/div/div/div/h2/a[2]/i").click()
         # add user bob
-        driver.find_element_by_xpath("//li[contains(.,'bob')]/span/a").click()
+        driver.find_element_by_xpath("//li[contains(.,'rex')]/span/a").click()
         time.sleep(1)
         driver.find_element_by_link_text("Close").click()
         driver.find_element_by_link_text("admin").click()
@@ -132,11 +132,11 @@ class TestProjects(unittest.TestCase):
             time.sleep(1)
         else:
             self.fail("time out")
-        driver.find_element_by_xpath("//tr[2]/td[5]").click()
+        driver.find_element_by_xpath("//tr[5]/td[4]").click()
         driver.find_element_by_xpath(
             "//div[@id='id_end_date_popover']/div/span").click()
         driver.find_element_by_xpath(
-            "//div[5]/div[3]/table/tbody/tr[5]/td[4]").click()
+            "//div[5]/div[3]/table/tbody/tr[2]/td[5]").click()
         driver.find_element_by_link_text("Create").click()
         time.sleep(1)
         driver.find_element_by_link_text("admin").click()

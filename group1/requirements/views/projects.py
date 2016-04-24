@@ -299,6 +299,7 @@ def download_file(request, projectID):
     response['Content-Disposition'] = 'attachment; filename=' + file.name
     return response
 
+
 @user_can_access_project()
 def makefile(request,projectID):
     response = HttpResponse()
@@ -307,3 +308,49 @@ def makefile(request,projectID):
     print(statement)
     response.write(statement)
     return response
+
+
+@user_can_access_project()
+def makepdf(request,projectID):
+    from django.shortcuts import render, redirect
+    from reportlab.platypus import SimpleDocTemplate
+    from forms import TaskFormSet
+    from forms import PDFForm
+    # print("flag1")
+
+    args={}
+
+    if request.method =='POST':
+        # print("flag2")
+        form = PDFForm(request.POST)
+
+        args['iteration_description']= 'iteration_description' in request.POST
+        args['iteration_duration'] = 'iteration_duration' in request.POST
+        args['story_description'] = 'story_description' in request.POST
+        args['story_reason'] = 'story_reason' in request.POST
+        args['story_test'] = 'story_test' in request.POST
+        args['story_task'] = 'story_task' in request.POST
+        args['story_owner'] = 'story_owner' in request.POST
+        args['story_hours'] = 'story_hours' in request.POST
+        args['story_status'] = 'story_status' in request.POST
+        args['story_points'] = 'story_points' in request.POST
+        args['pie_chart'] = 'pie_chart' in request.POST
+
+        #print(args)
+
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename=pdf_report.pdf'
+        tempcanvas = SimpleDocTemplate(response)
+
+        filemaker.process_pdf(tempcanvas,projectID, args)
+        return response
+    else:
+        # print("flag3")
+        form = PDFForm()
+    context = {'title': 'Generate and Download Report',
+                   'form': form,
+                   'action': '/req/makepdf/' + projectID,
+                   'button_desc': 'Download'}
+
+
+    return render(request, 'PDFDialog.html', context)

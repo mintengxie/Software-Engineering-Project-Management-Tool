@@ -10,6 +10,7 @@ from requirements.models.task import Task
 from requirements.models.iteration import Iteration
 from requirements.models.story_comment import StoryComment
 from django.forms.models import inlineformset_factory
+from requirements.models.filemaker import PDF
 
 
 class SignUpForm(UserCreationForm):
@@ -229,3 +230,29 @@ TaskFormSet = inlineformset_factory(
     ),
     form=TaskForm,
     extra=0)
+
+
+class PDFForm(forms.ModelForm):
+    def __init__(self, *args, ** kwargs):
+        super(PDFForm, self).__init__(*args, **kwargs)
+        for name, field in self.fields.items():
+            if 'class' in field.widget.attrs:
+                field.widget.attrs['class'] += ' form-control'
+            else:
+                field.widget.attrs.update({'class': 'form-control'})
+
+    class Meta:
+        model = PDF
+        fields = (
+            'iteration_description',
+            'iteration_duration',
+            'story_description',
+            'story_reason',
+            'story_test',
+            'story_task',
+            'story_owner',
+            'story_hours',
+            'story_status',
+            'story_points',
+            'pie_chart',
+        )
