@@ -89,7 +89,7 @@ class RoleTestCase(TestCase):
             user_manager.canEditStoryInProject(
                 userID=self.__user.id,
                 projectID=self.__project.id),
-            False)
+            True)
 
     def testEditStoryAsDev(self):
         self.__addUserAsDev()

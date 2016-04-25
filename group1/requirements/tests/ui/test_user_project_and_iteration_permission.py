@@ -100,7 +100,7 @@ class TestUserProjectAndIterationPermission(unittest.TestCase):
             time.sleep(1)
         else:
             self.fail("time out")
-        driver.find_element_by_xpath("//tr[1]/td[4]").click()
+        driver.find_element_by_xpath("//tr[6]/td[1]").click()
         driver.find_element_by_xpath(
             "//div[@id='id_end_date_popover']/div/span/i").click()
         for i in range(60):
@@ -114,7 +114,7 @@ class TestUserProjectAndIterationPermission(unittest.TestCase):
         else:
             self.fail("time out")
         driver.find_element_by_xpath(
-            "//div[5]/div[3]/table/tbody/tr[2]/td[4]").click()
+            "//div[5]/div[3]/table/tbody/tr[6]/td[5]").click()
         driver.find_element_by_link_text("Create").click()
         time.sleep(1)
         driver.find_element_by_link_text("SamuelLJackson").click()

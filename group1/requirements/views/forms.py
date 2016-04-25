@@ -11,11 +11,17 @@ from requirements.models.iteration import Iteration
 from requirements.models.story_comment import StoryComment
 from django.forms.models import inlineformset_factory
 from requirements.models.filemaker import PDF
+import datetime
 
 
 class SignUpForm(UserCreationForm):
+    ROLES = (  
+   	 	('cli', 'Client'),
+    		('own', 'Owner'),
+    		('dev', 'Developer')
+		)
     email = forms.EmailField(required=True)
-
+    role = forms.ChoiceField(choices=ROLES, required=True )
     def __init__(self, *args, **kwargs):
         super(SignUpForm, self).__init__(*args, **kwargs)
         for name, field in self.fields.items():
@@ -30,6 +36,7 @@ class SignUpForm(UserCreationForm):
             'first_name',
             'last_name',
             'email',
+            'role',
             'username',
             'password1',
             'password2')
@@ -79,10 +86,20 @@ class IterationForm(forms.ModelForm):
             else:
                 field.widget.attrs.update({'class': 'form-control'})
 
+
+    #   add by Zhi and Nora, to constraint the Iteration begin time
+    def clean_start_date(self):
+        self.startdate = self.cleaned_data['start_date']
+        curdate = datetime.datetime.date(datetime.datetime.now())
+        if curdate > self.startdate:
+            raise forms.ValidationError(
+                'Iteration begin date should be later than the current time!'
+            )
+        return self.startdate
+
     def clean_end_date(self):
-        startdate = self.cleaned_data['start_date']
         enddate = self.cleaned_data['end_date']
-        if enddate < startdate:
+        if enddate < self.startdate:
             raise forms.ValidationError(
                 'Iteration end date should be later than it\'s start date !')
         return enddate
@@ -98,7 +115,6 @@ class IterationForm(forms.ModelForm):
 
 
 class ProjectForm(forms.ModelForm):
-
     def __init__(self, *args, **kwargs):
         super(ProjectForm, self).__init__(*args, **kwargs)
         for name, field in self.fields.items():
@@ -148,9 +164,9 @@ class StoryForm(forms.ModelForm):
 
     def clean_hours(self):
         data = self.cleaned_data['hours']
-        if data < 0:
+        if data <= 0:
             raise forms.ValidationError(
-                'Hours should be greater than or equal to 0 !')
+                'Hours should be greater than 0 !')
         return data
 
     class Meta:
