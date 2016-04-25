@@ -107,7 +107,7 @@ class TestDownloadfile(unittest.TestCase):
         self.create_Story()
         self.move_story()
         self.download()
-        self.destroy()
+        #self.destroy()
 
     def create_Iteration(self):
         driver = self.driver
@@ -318,9 +318,9 @@ class TestDownloadfile(unittest.TestCase):
             driver.find_element_by_id("id_test").clear()
             driver.find_element_by_id("id_test").send_keys(story.test)
 
-            print(len(tasks))
+            #print(len(tasks))
             for x in range(0, len(tasks)):
-                print(tasks[x])
+                #print(tasks[x])
                 driver.find_element_by_id("id_task_set-"+str(x)+"-description").clear()
                 driver.find_element_by_id(
                     "id_task_set-"+str(x)+"-description").send_keys(tasks[x].description)
