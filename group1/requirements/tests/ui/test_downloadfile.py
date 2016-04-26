@@ -231,9 +231,9 @@ class TestDownloadfile(unittest.TestCase):
             "//div[5]/div[3]/table/tbody/tr[3]/td[6]").click()
         driver.find_element_by_link_text("Create").click()
         
-
+        
         # ---Create iteration 3
-        driver.find_element_by_link_text("Iterations").click()
+        driver.find_elements_by_link_text("Iterations")[0].click()
         driver.find_element_by_link_text("New Iteration").click()
         for i in range(60):
             try:
@@ -272,12 +272,11 @@ class TestDownloadfile(unittest.TestCase):
         driver.find_element_by_xpath(
             "//div[5]/div[3]/table/tbody/tr[4]/td[6]").click()
         driver.find_element_by_link_text("Create").click()
-       
+        
 
     def create_Story(self):
         driver = self.driver
-        driver.find_element_by_css_selector(
-            "i.glyphicon.glyphicon-plus").click()
+        driver.find_elements_by_css_selector("i.glyphicon.glyphicon-plus")[0].click()
         self.enter_story_data(self.story1, self.tasks1)
         driver.find_element_by_link_text("Create User Story").click()
         time.sleep(2)
@@ -370,7 +369,7 @@ class TestDownloadfile(unittest.TestCase):
             "//button[contains(@data-move-story, '" + self.story4.title + "')]").click()
         
         driver.find_element_by_xpath(
-            "//a[contains(text(),'" + TestDownloadfile.iter_title3 + "')]").click()
+            "//a[contains(text(),'" + TestDownloadfile.iter_title2 + "')]").click()
         
 
     def download(self):
