@@ -126,7 +126,7 @@ class TestDownloadfile(unittest.TestCase):
                     break
             except:
                 pass
-            time.sleep(1)
+            
         else:
             self.fail("time out")
         driver.find_element_by_id("id_title").clear()
@@ -138,7 +138,7 @@ class TestDownloadfile(unittest.TestCase):
                     break
             except:
                 pass
-            time.sleep(1)
+            
         else:
             self.fail("time out")
         driver.find_element_by_id("id_description").clear()
@@ -199,7 +199,7 @@ class TestDownloadfile(unittest.TestCase):
                     break
             except:
                 pass
-            time.sleep(1)
+            
         else:
             self.fail("time out")
         driver.find_element_by_id("id_title").clear()
@@ -216,7 +216,7 @@ class TestDownloadfile(unittest.TestCase):
                     break
             except:
                 pass
-            time.sleep(1)
+            
         else:
             self.fail("time out")
         driver.find_element_by_xpath(
@@ -230,7 +230,7 @@ class TestDownloadfile(unittest.TestCase):
         driver.find_element_by_xpath(
             "//div[5]/div[3]/table/tbody/tr[3]/td[6]").click()
         driver.find_element_by_link_text("Create").click()
-        time.sleep(1)
+        
 
         # ---Create iteration 3
         driver.find_element_by_link_text("Iterations").click()
@@ -241,7 +241,7 @@ class TestDownloadfile(unittest.TestCase):
                     break
             except:
                 pass
-            time.sleep(1)
+            
         else:
             self.fail("time out")
         driver.find_element_by_id("id_title").clear()
@@ -258,7 +258,7 @@ class TestDownloadfile(unittest.TestCase):
                     break
             except:
                 pass
-            time.sleep(1)
+           
         else:
             self.fail("time out")
         driver.find_element_by_xpath(
@@ -272,7 +272,7 @@ class TestDownloadfile(unittest.TestCase):
         driver.find_element_by_xpath(
             "//div[5]/div[3]/table/tbody/tr[4]/td[6]").click()
         driver.find_element_by_link_text("Create").click()
-        time.sleep(1)
+       
 
     def create_Story(self):
         driver = self.driver
@@ -364,20 +364,20 @@ class TestDownloadfile(unittest.TestCase):
         time.sleep(1)
         driver.find_element_by_xpath(
             "//a[contains(text(),'" + TestDownloadfile.iter_title2 + "')]").click()
-        time.sleep(1)
+        
 
         driver.find_element_by_xpath(
             "//button[contains(@data-move-story, '" + self.story4.title + "')]").click()
-        time.sleep(1)
+        
         driver.find_element_by_xpath(
             "//a[contains(text(),'" + TestDownloadfile.iter_title3 + "')]").click()
-        time.sleep(1)
+        
 
     def download(self):
         driver = self.driver
         driver.find_element_by_xpath("//div[contains(@id, 'page-wrapper')]/span/div[2]/a").click()
         driver.find_element_by_link_text("Download").click()
-        time.sleep(10)
+        time.sleep(3)
 
         driver.find_element_by_xpath("//div[contains(@id, 'page-wrapper')]/span/div[2]/a").click()
         driver.find_element_by_xpath("//input[contains(@id, 'id_pie_chart')]").click()
@@ -386,7 +386,7 @@ class TestDownloadfile(unittest.TestCase):
         driver.find_element_by_xpath("//input[contains(@id, 'id_story_task')]").click()
         time.sleep(2)
         driver.find_element_by_link_text("Download").click()
-        time.sleep(10)
+        time.sleep(3)
 
         driver.find_element_by_xpath("//div[contains(@id, 'page-wrapper')]/span/div[2]/a").click()
         driver.find_element_by_xpath("//input[contains(@id, 'id_iteration_description')]").click()
@@ -402,7 +402,7 @@ class TestDownloadfile(unittest.TestCase):
         driver.find_element_by_xpath("//input[contains(@id, 'id_pie_chart')]").click()
         time.sleep(2)
         driver.find_element_by_link_text("Download").click()
-        time.sleep(10)
+        time.sleep(3)
 
     def destroy(self):
         driver = self.driver

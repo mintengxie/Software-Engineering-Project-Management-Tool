@@ -61,4 +61,6 @@ class TestIterations(unittest.TestCase):
             driver.find_element_by_link_text("admin").click()
             driver.find_element_by_link_text("Logout").click()
             driver.find_element_by_link_text("Home").click()
-            
+    
+    def tearDown(self):
+        self.driver.quit()        
