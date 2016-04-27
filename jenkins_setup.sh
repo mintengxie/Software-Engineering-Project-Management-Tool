@@ -15,10 +15,10 @@ $WORKSPACE/../virtualenv/bin/pip install -r ./dependencies.txt
 #source $WORKSPACE/../virtualenv/bin/activate
 $WORKSPACE/../virtualenv/bin/python $WORKSPACE/group1/manage.py makemigrations
 $WORKSPACE/../virtualenv/bin/python $WORKSPACE/group1/manage.py migrate
-nohup $WORKSPACE/../virtualenv/bin/python group1/manage.py runserver 0.0.0.0:8000 &
+nohup $WORKSPACE/../virtualenv/bin/python group1/manage.py runserver 0.0.0.0:8090 &
 echo "from django.contrib.auth.models import User; User.objects.create_superuser('admin', 'aalva@bu.edu', 'pass')" | $WORKSPACE/../virtualenv/bin/python $WORKSPACE/group1/manage.py shell
 #$WORKSPACE/../virtualenv/bin/python group1/manage.py test
 $WORKSPACE/../virtualenv/bin/python group1/manage.py jenkins --enable-coverage requirements.tests.unit
 $WORKSPACE/../virtualenv/bin/pylint --rcfile=.pylintrc group1/requirements > group1/pylint.log || exit 0
 #$WORKSPACE/../virtualenv/bin/python group1/manage.py test requirements.tests.ui
-fuser -k 8000/tcp
+fuser -k 8090/tcp
