@@ -16,9 +16,7 @@ class AdminTest(unittest.TestCase):
         self.verificationErrors = []
         self.accept_next_alert = True
 
-
-
-    def test_wrong_password(self):
+    def test_wrong_pwd_3_times(self):
         driver = self.driver
         driver.get(self.base_url + "/")
         driver.find_element_by_link_text("Sign In").click()
@@ -28,7 +26,7 @@ class AdminTest(unittest.TestCase):
         driver.find_element_by_id("password").send_keys("wrongpassword")
         driver.find_element_by_xpath("//button[@type='submit']").click()
         self.assertEqual(
-            "Username or Password is incorrect ! Please try again !",
+            "Username or Password is incorrect ! Please try again ! If you fail more than 2 times, you need to wait 60s for next try!",
             driver.find_element_by_css_selector("div.alert.alert-danger").text)
         driver.find_element_by_id("username").clear()
         driver.find_element_by_id("username").send_keys("admin")
@@ -36,112 +34,59 @@ class AdminTest(unittest.TestCase):
         driver.find_element_by_id("password").send_keys("wrongpassword")
         driver.find_element_by_xpath("//button[@type='submit']").click()
         self.assertEqual(
-            "Username or Password is incorrect ! Please try again !",
+            "Username or Password is incorrect ! Please try again ! If you fail more than 1 times, you need to wait 60s for next try!",
             driver.find_element_by_css_selector("div.alert.alert-danger").text)
         driver.find_element_by_id("username").clear()
         driver.find_element_by_id("username").send_keys("admin")
         driver.find_element_by_id("password").clear()
         driver.find_element_by_id("password").send_keys("wrongpassword")
         driver.find_element_by_xpath("//button[@type='submit']").click()
-        
         self.assertEqual(
-            "Username or Password is incorrect ! Please try again !",
+            "you have tried many times, please signin after 60s later.",
             driver.find_element_by_css_selector("div.alert.alert-danger").text)
-        
-        
 
-   # def create_duplicate_project_name(self):
-        driver = self.driver
-        driver.get(self.base_url + "/")
-        driver.find_element_by_link_text("Sign In").click()
+        #user has to wait 60s for next try, even now user inputs the username with the correct pwd, system won't let user login
         driver.find_element_by_id("username").clear()
         driver.find_element_by_id("username").send_keys("admin")
         driver.find_element_by_id("password").clear()
         driver.find_element_by_id("password").send_keys("pass")
         driver.find_element_by_xpath("//button[@type='submit']").click()
-        driver.find_element_by_css_selector(
-            "i.glyphicon.glyphicon-plus").click()
-        for i in range(60):
-            try:
-                if self.is_element_present(By.ID, "id_title"):
-                    break
-            except:
-                pass
-            time.sleep(1)
-        else:
-            self.fail("time out")
-        driver.find_element_by_id("id_title").clear()
-        driver.find_element_by_id("id_title").send_keys(
-            "project title")
-        for i in range(60):
-            try:
-                if self.is_element_present(By.ID, "id_description"):
-                    break
-            except:
-                pass
-            time.sleep(1)
-        else:
-            self.fail("time out")
-        driver.find_element_by_id("id_description").clear()
-        driver.find_element_by_id("id_description").send_keys(
-            "project description")
-        driver.find_element_by_link_text("Create Project").click()
-        time.sleep(1)
-        driver.find_element_by_link_text("admin").click()
-        driver.find_element_by_link_text("Logout").click()
-        driver.find_element_by_link_text("Return to Home").click()
-
-
-        driver.get(self.base_url + "/")
-        driver.find_element_by_link_text("Sign In").click()
+        self.assertEqual(
+            "you have tried many times, please signin after 60s later.",
+            driver.find_element_by_css_selector("div.alert.alert-danger").text)
+        time.sleep(10)
         driver.find_element_by_id("username").clear()
         driver.find_element_by_id("username").send_keys("admin")
         driver.find_element_by_id("password").clear()
         driver.find_element_by_id("password").send_keys("pass")
         driver.find_element_by_xpath("//button[@type='submit']").click()
-        driver.find_element_by_css_selector(
-            "i.glyphicon.glyphicon-plus").click()
-        for i in range(60):
-            try:
-                if self.is_element_present(By.ID, "id_title"):
-                    break
-            except:
-                pass
-            time.sleep(1)
-        else:
-            self.fail("time out")
-        driver.find_element_by_id("id_title").clear()
-        driver.find_element_by_id("id_title").send_keys(
-            "project title")
-        for i in range(60):
-            try:
-                if self.is_element_present(By.ID, "id_description"):
-                    break
-            except:
-                pass
-            time.sleep(1)
-        else:
-            self.fail("time out")
-        driver.find_element_by_id("id_description").clear()
-        driver.find_element_by_id("id_description").send_keys(
-            "project description")
-        driver.find_element_by_link_text("Create Project").click()
-      #  self.assertEqual(
-       #     "duplicate project name ! Please try again !",
-       #     driver.find_element_by_css_selector("div.alert.alert-danger").text)
-      #  time.sleep(1)
-        driver.find_element_by_xpath(
-            "//a[contains(@data-del-proj, 'project title')]").click()
-        time.sleep(1)
-        driver.find_element_by_link_text("Delete Project").click()
-        time.sleep(1)
+        self.assertEqual(
+            'you have tried many times, please signin after 60s later.',
+            driver.find_element_by_css_selector("div.alert.alert-danger").text)
+        time.sleep(50)
 
+        #after 60s, user can try again.
+        #if user input wrong, count restarts from 0
+        driver.find_element_by_id("username").clear()
+        driver.find_element_by_id("username").send_keys("admin")
+        driver.find_element_by_id("password").clear()
+        driver.find_element_by_id("password").send_keys("wrongpassword")
+        driver.find_element_by_xpath("//button[@type='submit']").click()
+        self.assertEqual(
+            "Username or Password is incorrect ! Please try again ! If you fail more than 2 times, you need to wait 60s for next try!",
+            driver.find_element_by_css_selector("div.alert.alert-danger").text)
 
+        #if user input correct pwd, log in successfully
+        driver.find_element_by_id("username").clear()
+        driver.find_element_by_id("username").send_keys("admin")
+        driver.find_element_by_id("password").clear()
+        driver.find_element_by_id("password").send_keys("pass")
+        driver.find_element_by_xpath("//button[@type='submit']").click()
+        self.assertEqual(
+            "admin",
+            driver.find_element_by_link_text("admin").text)
         driver.find_element_by_link_text("admin").click()
         driver.find_element_by_link_text("Logout").click()
-
-
-        driver.find_element_by_link_text("Return to Home").click()
 
 
     def is_element_present(self, how, what):

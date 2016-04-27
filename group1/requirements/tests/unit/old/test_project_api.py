@@ -134,19 +134,6 @@ class ProjectTestCase(TestCase):
         p = models.project_api.create_project(user, fields)
         self.assertEqual(0, Project.objects.count())
 
-    def test_create_duplicate_project_fail(self):
-        fields = {"title": "title",
-                  "description": "desc"}
-        p = False
-        p1 = False
-        if not models.project_api.duplicate_project(self.__user,fields):
-            p = models.project_api.create_project(self.__user, fields)
-        if not models.project_api.duplicate_project(self.__user, fields):
-            p1 = models.project_api.create_project(self.__user, fields)
-        self.assertEqual(1, Project.objects.filter(id=p.id).count())
-        self.assertEqual(False, p1)
-
-
     def test_add_user_to_project_pass(self):
         p = Project(title="title", description="desc")
         p.save()
@@ -252,4 +239,72 @@ class ProjectTestCase(TestCase):
         models.project_api.delete_project(None)
         self.assertEqual(1, Project.objects.filter(id=p.id).count())
 
+    def test_add_iteration_to_project_pass(self):
+        p = Project(title="title", description="desc")
+        p.save()
+        title = "title"
+        description = "description"
 
+        start_date = datetime.date.today()
+        end_date = datetime.date.max
+        iteration = models.project_api.add_iteration_to_project(title,
+                                                                description,
+                                                                start_date,
+                                                                end_date, p.id)
+
+        self.assertEqual(start_date, iteration.start_date)
+        self.assertEqual(end_date, iteration.end_date)
+        self.assertEqual(title, iteration.title)
+        self.assertEqual(description, iteration.description)
+        self.assertEqual(1, p.iteration_set.count())
+
+    def test_add_iteration_to_project_fail_bad_project(self):
+        p = Project(title="title", description="desc")
+        p.save()
+
+        # pass a null prject
+        title = "title"
+        description = "description"
+        start_date = datetime.date.today()
+        end_date = datetime.date.max
+        iteration = models.project_api.add_iteration_to_project(title,
+                                                                description,
+                                                                start_date,
+                                                                end_date,
+                                                                None)
+        self.assertEqual(0, p.iteration_set.count())
+
+        # pass an unknown project
+        projID = p.id - 1
+        iteration = models.project_api.add_iteration_to_project(title,
+                                                                description,
+                                                                start_date,
+                                                                end_date,
+                                                                projID)
+        self.assertEqual(0, p.iteration_set.count())
+
+    def test_get_iterations_for_project_none(self):
+        p = Project(title="title", description="desc")
+        p.save()
+        iterations = models.project_api.get_iterations_for_project(p)
+        self.assertEqual(0, iterations.count())
+
+    def test_get_iterations_for_project_one(self):
+        p = Project(title="title", description="desc")
+        p.save()
+        title = "title"
+        description = "description"
+        start_date = datetime.date.today()
+        end_date = datetime.date.max
+        iteration = models.project_api.add_iteration_to_project(title,
+                                                                description,
+                                                                start_date,
+                                                                end_date,
+                                                                p.id)
+
+        self.assertEqual(start_date, iteration.start_date)
+        self.assertEqual(end_date, iteration.end_date)
+        self.assertEqual(title, iteration.title)
+        self.assertEqual(description, iteration.description)
+        iterations = models.project_api.get_iterations_for_project(p)
+        self.assertEqual(1, iterations.count())
