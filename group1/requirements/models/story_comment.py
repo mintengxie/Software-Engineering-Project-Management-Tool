@@ -1,7 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
 from story import Story
-import datetime
 
 
 class StoryComment(models.Model):
@@ -24,10 +22,10 @@ def get_comments_for_story(story):
     return StoryComment.objects.filter(story_id=story.id)
 
 
-def get_comment(commentID):
+def get_comment(commentid):
     try:
-        return StoryComment.objects.get(id=commentID)
-    except Exception as e:
+        return StoryComment.objects.get(id=commentid)
+    except Exception:
         return None
 
 
@@ -41,11 +39,11 @@ def create_comment(story, fields):
     comment = fields.get('comment', '')
     user = fields.get('user', '')
 
-    aComment = StoryComment(
+    commentinstance = StoryComment(
         story=story,
         title=title,
         comment=comment,
         user = user,
     )
-    aComment.save()
-    return aComment
+    commentinstance.save()
+    return commentinstance
